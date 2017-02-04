@@ -1,0 +1,512 @@
+html,body{
+	padding: 0px;
+	margin: 0px;
+}
+
+.Dplayer-container{
+	background: rgba(0,0,0,1);
+}
+
+.Dplayer-controls-box{
+	font-family: "Microsoft Yahei";
+	position: relative;
+	height: 40px;
+	background: #f00;
+	display: -webkit-box;
+	display: box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-orient: horizontal ;
+	box-orient: horizontal;
+	-webkit-flex-direction: row;
+	flex-direction: row;
+	-webkit-align-items:stretch;
+	align-items:stretch;
+}
+
+.Dplayer-controls-btn{
+	max-width: 40px;
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	-webkit-box-align:stretch;
+    box-align:stretch;
+    -webkit-box-flex:1;
+    box-flex:1;
+    -webkit-flex:1 1 auto;
+    flex:1 1 auto;
+    position: relative;
+    font-size: 20px;
+}
+
+/****************播放****************/
+.Dplayer-play{
+	padding-left: 10px;
+}
+
+.Dplayer-container[data-size="smaller"] .Dplayer-play{
+	max-width: 100%;
+	width: 100%;
+	text-align: left;
+}
+
+.Dplayer-play:after{
+	font-family: "DplayerIcon";
+	font-size: 32px;
+	color: #f1f1f1;
+}
+
+.Dplayer-play[data-type="play"]:after{
+	content: "\e6b0";
+}
+
+.Dplayer-play[data-type="pause"]:after{
+	content: "\e6a6";
+}
+
+/****************进度****************/
+.Dplayer-progress-box{
+	max-width: 100%;
+	width: 100%;
+	padding-left: 10px;
+	-webkit-align-self:stretch;
+    align-self:stretch;
+    display: -webkit-box;
+    display: box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align:center;
+    box-align:center;
+    -webkit-box-orient: horizontal;
+	box-orient: horizontal;
+	-webkit-flex-direction: row;
+	flex-direction: row;
+	-webkit-align-items:center;
+    align-items:center;
+}
+
+.Dplayer-container[data-size="smaller"] .Dplayer-progress-box{
+	position: absolute;
+    top: -30px;
+    left: 0px;
+    padding-left: 0px;
+    height: 30px;
+    background: rgba(32,32,32,0.7);
+    z-index: 10102;
+}
+
+.Dplayer-progress{
+	max-width: 100%;
+	width: 100%;
+	height: 6px;
+	border-radius: 3px;
+	position: relative;
+	background: #f0f0f0;
+}
+
+.Dplayer-progress:hover{
+	cursor: pointer;
+}
+
+.Dplayer-preProgressBar,.Dplayer-progressBar{
+	position: absolute;
+	height: 100%;
+	background: #66ccff;
+	z-index: 1000;
+	border-radius: 3px;
+	-webkit-transition:width 0.3s linear;
+	-moz-transition:width 0.3s linear;
+	-o-transition:width 0.3s linear;
+	transition:width 0.3s linear;
+}
+
+.Dplayer-progressBar{
+	z-index: 1001;
+}
+
+.Dplayer-progressBtn{
+	position: absolute;
+	right: -5px;
+	top: -5px;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
+}
+
+.Dplayer-progress-time{
+	max-width: 100px;
+	padding-left: 5px;
+	width: 100%;
+	-webkit-box-flex:1;
+	box-flex:1;
+	-webkit-flex:1 1 auto;
+	flex:1 1 auto;
+	color: #fff;
+	line-height: 40px;
+	text-align: center;
+	font-size: 16px;
+}
+
+.Dplayer-currentTime{
+	position: relative;
+	margin-right: 10px;
+}
+
+.Dplayer-currentTime:after{
+	position: absolute;
+	width: 32px;
+	height: 32px;
+	content: "/";
+	right: -21px;
+}
+
+/****************音量****************/
+.Dplayer-volume-box{
+	z-index: 10103;
+}
+
+.Dplayer-volume-box:hover{
+	cursor: pointer;
+}
+
+.Dplayer-volume-num{
+	padding-top:5px;
+	color: #222;
+	text-align: center;
+	font-size: 12px;
+	line-height: 12px;
+	height: auto;
+}
+
+.Dplayer-volume{
+	width: 4px;
+	height: 80px;
+	margin: 0 auto;
+	background: #c1c1c1;
+	margin-top: 3px;
+	position: relative;
+}
+
+.Dplayer-volumeBar{
+	position: absolute;
+	background: #66ccff;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	-webkit-transition:height 0.1s linear;
+	-moz-transition:height 0.1s linear;
+	-o-transition:height 0.1s linear;
+	transition:height 0.1s linear;
+}
+
+.Dplayer-volumeBtn{
+	position: absolute;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	top: -2px;
+	left: -2px;
+	box-shadow: 0px 0px 6px rgba(0,0,0,0.8);
+	background: #fff;
+}
+
+.Dplayer-volumeIcon{
+	position: relative;
+}
+
+.Dplayer-volumeIcon:after{
+	font-family: "DplayerIcon";
+	font-size: 20px;
+	content: "\e6f6";
+	color: #f1f1f1;
+}
+
+.Dplayer-volume-bglayer{
+	position: absolute;
+	bottom: 40px;
+	left: 0px;
+	width: 100%;
+	height: 100px;
+	background: #fff;
+	box-shadow: 0px 0px 10px rgba(64,64,64,0.8);
+	display: none;
+}
+
+/****************循环****************/
+.Dplayer-looper:after{
+	font-family: "DplayerIcon";
+	font-size: 20px;
+	content: "\e6de";
+	color: #f1f1f1;
+}
+
+.Dplayer-looper[data-type="loop"]:after{
+	color: #66ccff;
+}
+
+/****************大屏****************/
+.Dplayer-DMDisplayControl:after{
+	font-family: "DplayerIcon";
+	font-size: 20px;
+	content: "\e6ea";
+	color: #f1f1f1;
+}
+
+/****************全屏****************/
+.Dplayer-fullScreen:after{
+	font-family: "DplayerIcon";
+	font-size: 20px;
+	content: "\e663";
+	color: #f1f1f1;
+}
+
+/*****************canvas******************/
+.Dplayer-canvas{
+	position: absolute;
+	z-index: 9999;
+	left: 0px;
+	top: 0px;
+}
+/******************icon*********************/
+@font-face{
+  font-family: 'DplayerIcon';  /* project id 202624 */
+  src: url('//at.alicdn.com/t/font_hqfj8ghrdx0cc8fr.eot');
+  src: url('//at.alicdn.com/t/font_hqfj8ghrdx0cc8fr.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_hqfj8ghrdx0cc8fr.woff') format('woff'),
+  url('//at.alicdn.com/t/font_hqfj8ghrdx0cc8fr.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_hqfj8ghrdx0cc8fr.svg#iconfont') format('svg');
+}
+
+
+/*******************fullscreen***************/
+:-webkit-full-screen {
+	max-width: 100% !important;
+	width: 100% !important;
+	height: 100% !important;
+	z-index: 10000 !important;
+}
+:-moz-full-screen {
+	max-width: 100% !important;
+	width: 100% !important;
+	height: 100% !important;
+	z-index: 10000 !important;
+}
+:-ms-fullscreen {
+	max-width: 100% !important;
+	width: 100% !important;
+	height: 100% !important;
+	z-index: 10000 !important;
+}
+:full-screen{ /*pre-spec */
+	max-width: 100% !important;
+	width: 100% !important;
+	height: 100% !important;
+	z-index: 10000 !important;
+}
+:fullscreen{ /* spec */
+	max-width: 100% !important;
+	width: 100% !important;
+	height: 100% !important;
+	z-index: 10000 !important;
+}
+
+/*移动设备*/
+.Dplayer-mobile[data-isFullScreen="yes"]{
+	position: fixed;
+	max-width: 100% !important;
+	width: 100% !important;
+	height: 100% !important;
+	z-index: 10000 !important;
+}
+
+/* deeper elements */
+:-webkit-full-screen video{
+	width: 100% !important;
+ 	height: 100% !important;
+ 	z-index: 10001 !important;
+}
+
+:-webkit-full-screen canvas{
+	z-index: 10101 !important;
+}
+
+:-webkit-full-screen .Dplayer-controls-box{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	z-index: 11111 !important;
+}
+
+:-webkit-full-screen .Dplayer-progress-box{
+	position: relative!important;
+    top: 0px!important;
+    left: 0px!important;
+    padding-left: 10px!important;
+    height: auto!important;
+    background: none!important;
+    width: 100%!important;
+}
+
+:-webkit-full-screen .Dplayer-play{
+	max-width: 40px!important;
+	width: 100%;
+	text-align: center!important;
+}
+
+:-moz-full-screen video{
+	width: 100% !important;
+ 	height: 100% !important;
+ 	z-index: 10001 !important;
+}
+
+:-moz-full-screen canvas{
+	z-index: 10101 !important;
+}
+
+:-moz-full-screen .Dplayer-controls-box{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	z-index: 11111 !important;
+}
+
+:-moz-full-screen .Dplayer-progress-box{
+	position: relative!important;
+    top: 0px!important;
+    left: 0px!important;
+    padding-left: 10px!important;
+    height: auto!important;
+    background: none!important;
+    width: 100%!important;
+}
+
+:-moz-full-screen .Dplayer-play{
+	max-width: 40px!important;
+	width: 100%;
+	text-align: center!important;
+}
+
+:-ms-full-screen video{
+	width: 100% !important;
+ 	height: 100% !important;
+ 	z-index: 10001 !important;
+}
+
+:-ms-full-screen canvas{
+	z-index: 10101 !important;
+}
+
+:-ms-full-screen .Dplayer-controls-box{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	z-index: 11111 !important;
+}
+
+:-ms-full-screen .Dplayer-progress-box{
+	position: relative!important;
+    top: 0px!important;
+    left: 0px!important;
+    padding-left: 10px!important;
+    height: auto!important;
+    background: none!important;
+    width: 100%!important;
+}
+
+:-ms-full-screen .Dplayer-play{
+	max-width: 40px!important;
+	width: 100%;
+	text-align: center!important;
+}
+
+:full-screen video{
+	width: 100% !important;
+ 	height: 100% !important;
+ 	z-index: 10001 !important;
+}
+
+:full-screen canvas{
+	z-index: 10101 !important;
+}
+
+:full-screen .Dplayer-controls-box{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	z-index: 11111 !important;
+}
+
+:full-screen .Dplayer-progress-box{
+	position: relative!important;
+    top: 0px!important;
+    left: 0px!important;
+    padding-left: 10px!important;
+    height: auto!important;
+    background: none!important;
+    width: 100%!important;
+}
+
+:full-screen .Dplayer-play{
+	max-width: 40px!important;
+	width: 100%;
+	text-align: center!important;
+}
+
+/*移动设备*/
+.Dplayer-mobile[data-isFullScreen="yes"] video{
+	position: absolute;
+	width: auto !important;
+	height: auto !important;
+	left: 0px;
+	top: 0px;
+	width: 100% !important;
+	height: 100% !important;
+	z-index: 10001 !important;
+}
+
+.Dplayer-mobile[data-isFullScreen="yes"] canvas{
+	position: absolute;
+	z-index: 10101 !important;
+}
+
+.Dplayer-mobile[data-isFullScreen="yes"] .Dplayer-controls-box{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	z-index: 11111 !important;
+}
+
+@media screen and (min-width: 520px){
+	.Dplayer-mobile[data-isFullScreen="yes"] .Dplayer-progress-box{
+		position: relative!important;
+	    top: 0px!important;
+	    left: 0px!important;
+	    padding-left: 10px!important;
+	    height: auto!important;
+	    background: none!important;
+	    width: 100%!important;
+	}
+
+	.Dplayer-mobile[data-isFullScreen="yes"] .Dplayer-play{
+		max-width: 40px!important;
+		width: 100%;
+		text-align: center!important;
+	}
+}
+
+/* styling the backdrop*/
+::backdrop {
+
+}
+::-ms-backdrop {
+
+}
