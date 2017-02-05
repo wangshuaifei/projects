@@ -2,6 +2,7 @@
 var D = function(selector,options){
 
 	var opts = {
+		mode : "player",
 		//canvas font
 		globalFontStyle : "normal",
 		globalFontSize : 24,
@@ -343,6 +344,11 @@ D.prototype.Video = {
 
 		//点击进度条
 		this.elem.progress.addEventListener(click,function(e){
+
+			if(_self.D.options.mode == "live"){
+				return;
+			}
+
 			e = e.changedTouches ? e.changedTouches[0] : e;
 
 			var tar = this,
@@ -357,6 +363,9 @@ D.prototype.Video = {
 		this.elem.progressBtn.addEventListener(evs,function(e){
 			e.preventDefault();
 			e.stopPropagation();
+			if(_self.D.options.mode == "live"){
+				return;
+			}
 			this.setAttribute("data-status","dragable");
 			_self.pause(_self.elem.play);
 		},false);
@@ -602,7 +611,7 @@ D.prototype.Video = {
 		//重新开始动画
 		window.cancelAnimationFrame(this.D.loop);
 		this.D.loop = window.requestAnimationFrame(function(time){
-			_self.D.step(0,Canvas,_self,_self.D.DMsystem,Canvas.canvas,Canvas.context);
+			_self.D.step(0,Canvas,_self,_self.D.DMsystem,Canvas.canvas,Canvas.context,_self.D.options);
 		});
 	},
 
@@ -824,10 +833,16 @@ D.prototype.Canvas = {
 
 	//根据用户的样式替换全局样式
 	replaceSomeStyle : function(cxt,DM,options){
-		if(DM.fontSize)
-		cxt.font = DM.fontSize + "px Microsoft Yahei "+options.globalFontWeight;
-		if(DM.color)
-		cxt.fillStyle = DM.color;
+		var fsize = DM.fontSize,
+			color = DM.color;
+
+		if(fsize){
+			cxt.font = fsize + "px Microsoft Yahei "+options.globalFontWeight;
+			DM.width = cxt.measureText(DM.text).width;
+		}	
+		if(color){
+			cxt.fillStyle = color;
+		}
 	},
 
 	//去除默认特效
@@ -842,12 +857,11 @@ D.prototype.Canvas = {
 	},
 
 	drawDM : function(cxt,DM,options){
+		var text = DM.text;
 		cxt.save();
 		this.replaceSomeStyle(cxt,DM,options);
-		cxt.fillText(DM.text,DM.x,DM.y);
+		cxt.fillText(text,DM.x,DM.y);
 		cxt.restore();
-		if(!DM.width)
-		DM.width = cxt.measureText(DM.text).width;
 	}
 };
 
@@ -873,32 +887,53 @@ D.prototype.DMsystem = {
 
 	//获取弹幕
 	initDM : function(){
-		var cv = this.D.Canvas.canvas,
-			cxt = this.D.Canvas.context,
-			len = this.DM.textDM.data.length;
+		var _self = this,
+			D = _self.D,
+			DM = _self.DM,
+			Canvas = D.Canvas,
+			cv = Canvas.canvas,
+			cxt = Canvas.context,
+			len = DM.textDM.data.length,
+			options = D.options;
 
-		this.D.options.DM = this.DM;
+		options.DM = DM;
 		//用于计算宽度
-		this.D.Canvas.setBaseTextStyle(cxt);
+		Canvas.setBaseTextStyle(cxt);
 
 		for( var i = 0; i < len; i++ ){
-			var type = this.DM.textDM.data[i].type,
-				text = this.DM.textDM.data[i].text,
-				spos = cxt.measureText(text).width + cv.width;
-
-			this.DM.textDM.data[i].x = (type == "slide" ? spos : cv.width/2 );
-			this.DM.textDM.data[i].y = 0;
-			this.DM.textDM.data[i].speed = (type == "slide" ? ((Math.random() * 3 + 2) >> 0) : 0);
-			this.DM.textDM.data[i].hasShowed = false;
-			this.DM.textDM.data[i].isDisplaying = false;
+			var tDM = DM.textDM.data[i];
+			_self.initDMStyle([tDM]);
 		}
 
 		//按出现时间排序
-		this.DM.textDM.data.sort(function(a,b){
+		DM.textDM.data.sort(function(a,b){
 			return a.currentTime - b.currentTime;
 		});
 
-		this.D.Canvas.removeBaseEffects(this.DM.textDM.data.length);
+		Canvas.removeBaseEffects(DM.textDM.data.length);
+	},
+
+	initDMStyle : function(DMs){
+		var D = this.D,
+			cv = D.Canvas.canvas,
+			cxt = D.Canvas.context,
+			CWidth = cv.width;
+
+		for( var i = 0, DM; DM = DMs[i++]; ){
+			if(D.options.mode == "live"){
+				DM.type = "slide";
+			}
+			var type = DM.type,
+				DWidth = cxt.measureText(DM.text).width;
+
+			DM.x = (type == "slide" ? (DWidth + CWidth) : CWidth/2 );
+			DM.y = 0;
+			DM.speed = (type == "slide" ? ((Math.random() * 3 + 2) >> 0) : 0);
+			DM.hasShowed = false;
+			DM.isDisplaying = false;
+			DM.width = DWidth;
+		}
+
 	},
 
 	//重置所有弹幕的位置和状态
@@ -906,12 +941,12 @@ D.prototype.DMsystem = {
 		if(!this.DM)
 		return;
 
-		var D 			= this.D,
-			DMs 		= this.DM.textDM.data,
-			currentTime = this.D.Video.currentTime << 0 || 0,
-			cxt 		= this.D.Canvas.context,
-			_self 		= this;
-			this.idx 	= 0;
+		var _self		= this,
+			D 			= _self.D,
+			DMs 		= _self.DM.textDM.data,
+			currentTime = D.Video.currentTime << 0 || 0,
+			cxt 		= D.Canvas.context;
+			_self.idx 	= 0;
 
 		//停止循环，防止创建多个动画循环
 		window.cancelRequestAnimationFrame(D.loop);
@@ -928,7 +963,7 @@ D.prototype.DMsystem = {
 		}
 
 		D.Canvas.globalStyleHasChanged = false;
-		D.step((D.runTime || 0),D.Canvas,D.Video,this,D.Canvas.canvas,D.Canvas.context);
+		D.step((D.runTime || 0),D.Canvas,D.Video,this,D.Canvas.canvas,D.Canvas.context,D.options);
 	},
 
 	//计算有多少行的弹幕
@@ -1038,10 +1073,11 @@ D.prototype.DMsystem = {
 			return;
 		}
 
+		var row = DM.row;
 		DM.isDisplaying = false;
 		DM.hasShowed = true;
-		if(!DM.row.speedChange)
-		this.rows.unshift(DM.row);
+		if(!row.speedChange)
+		this.rows.unshift(row);
 		DM.row = null;
 	},
 
@@ -1097,15 +1133,14 @@ D.prototype.setWrapperBox = function(status){
 	this.wrapper.setAttribute("data-size","normal");
 };
 
-//普通弹幕的循环
-D.prototype.normalStep = function(Canvas,Video,DMsystem,cv,cxt){
-	var	options = this.options,
-		DMs = DMsystem.DM.textDM.data,
+D.prototype.playerMode = function(Canvas,Video,DMsystem,cv,cxt,options){
+	var	DMs = DMsystem.DM.textDM.data,
+		prev = 0,
 		currentTime = ( Video.currentTime << 0 ) || 0;
 
 	DMsystem.resetStartIdx(DMs);  	//更新循环开始下标
 
-	if(!this.Canvas.globalStyleHasChanged)
+	if(!Canvas.globalStyleHasChanged)
 	Canvas.setBaseTextStyle(cxt);	//设置文字基本样式
 
 	for( var i = DMsystem.idx, DM; DM = DMs[i++]; ){
@@ -1116,10 +1151,31 @@ D.prototype.normalStep = function(Canvas,Video,DMsystem,cv,cxt){
 			DM.hasShowed = true;
 			continue;
 		}
-		DMsystem.refresh(DM); 			//更新位置
-		Canvas.drawDM(cxt,DM,options); 	//绘制
+		DMsystem.refresh(DM); 						//更新位置
+		Canvas.drawDM(cxt,DM,options); 				//绘制
 		DMsystem.recovery(DM,currentTime);  		//判断弹幕是否显示完毕并回收相关行
 	}
+};
+
+D.prototype.liveMode = function(Canvas,Video,DMsystem,cv,cxt,options){
+	var DMs = DMsystem.DM.textDM.data;
+
+	DMsystem.resetStartIdx(DMs);  	//更新循环开始下标
+
+	if(!Canvas.globalStyleHasChanged)
+	Canvas.setBaseTextStyle(cxt);	//设置文字基本样式
+
+	for( var i = DMsystem.idx, DM; DM = DMs[i++]; ){
+		DMsystem.refresh(DM); 						//更新位置
+		Canvas.drawDM(cxt,DM,options); 				//绘制
+		DMsystem.recovery(DM);  		//判断弹幕是否显示完毕并回收相关行
+	}
+
+};
+
+//普通弹幕的循环
+D.prototype.normalStep = function(Canvas,Video,DMsystem,cv,cxt,options){
+	this[options.mode+"Mode"](Canvas,Video,DMsystem,cv,cxt,options);
 };
 
 //高级弹幕循环
@@ -1128,22 +1184,22 @@ D.prototype.specialStep = function(){
 };
 
 //总循环
-D.prototype.step = function(time,Canvas,Video,DMsystem,cv,cxt){
+D.prototype.step = function(time,Canvas,Video,DMsystem,cv,cxt,options){
 	var _self = this,
 		count = _self.getCount();
 
-	if(count % _self.options.downFrame == 0 && Video.playing){
+	if(count % options.downFrame == 0 && Video.playing){
 		Canvas.clearCanvas(cv,cxt); 	//清除画布
 
-		if(this.DMsystem.DMDisplay)
-		_self.normalStep(Canvas,Video,DMsystem,cv,cxt);
+		if(DMsystem.DMDisplay)
+		_self.normalStep(Canvas,Video,DMsystem,cv,cxt,options);
 	}
 
 	_self.count++;
 	_self.runTime = time;
 
 	_self.loop = window.requestAnimationFrame(function(time){
-		_self.step(time,Canvas,Video,DMsystem,cv,cxt);
+		_self.step(time,Canvas,Video,DMsystem,cv,cxt,options);
 	});
 };
 
@@ -1374,15 +1430,23 @@ D.prototype.changeHeight = function(height){
 
 //添加普通弹幕
 D.prototype.addNewNormalDM = function(DM){
-	this.DMsystem.DM.textDM.data.push(DM);
-	this.DMsystem.DM.textDM.length += 1;
+	var DMsystem = this.DMsystem,
+		textDM = DMsystem.DM.textDM;
+
+	DMsystem.initDMStyle([DM]);
+	textDM.data.push(DM);
+	textDM.length += 1;
 };
 
 //添加普通弹幕数组
 D.prototype.addNewNormalDMArray = function(DMArr){
-	var len = DMArr.length;
-	this.DMsystem.DM.textDM.data = this.DMsystem.DM.textDM.data.concat(DMArr);
-	this.DMsystem.DM.textDM.length += length;
+	var len = DMArr.length,
+		DMsystem = this.DMsystem,
+		textDM = DMsystem.DM.textDM;
+
+	DMsystem.initDMStyle(DMArr);
+	textDM.data = textDM.data.concat(DMArr);
+	textDM.length += length;
 };
 
 //更新弹幕库
