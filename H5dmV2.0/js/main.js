@@ -1,5 +1,5 @@
 var DMs = [];
-for( var i = 0; i < 498; i++ ){
+for( var i = 0; i < 3998; i++ ){
 	var pos = i % 10 == 0 ? "top" : i % 9 == 0 ? "bottom" : "slide";
 	DMs.push({
 		text : "我是弹幕" + i,
