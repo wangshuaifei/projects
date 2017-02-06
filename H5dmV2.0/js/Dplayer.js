@@ -58,6 +58,13 @@ var D = function(selector,options){
 		}
 	};
 
+	//转载请保留个人信息
+	this.author = {
+		"name" : "孤月",
+		"date" : "2017-02-06",
+		"mail" : "454236029@qq.com"
+	};
+	this.version = "2.01";
 	//播放器id
 	this.id = document.querySelectorAll(".Dplayer-container").length;
 	//播放器容器
