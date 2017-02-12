@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>IMGFormat</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="css/format.css">
+</head>
+<body>
+<header id="header">IMGFormat</header>
+<section id="content">
+	<section id="con_box">
+		<div class="img_box"><img src="img/1.jpg" id="source_img"></div>
+		<canvas id="canvas"></canvas>
+		<div class="to">TO</div>
+		<div class="img_box"><img src="img/1.jpg" id="preview_img"></div>
+		<div class="select_box">
+			<select id="way_choose">
+				<option selected="selected">本地文件选择</option>
+				<option>网络文件选择</option>
+			</select>
+			
+			<section class="file_choose">
+				<span>请选择image文件:</span>
+				<label for="file">+</label>
+				<input type="file" id="file" name="file" accpet="image/*">
+			</section>
+			<section class="url_input">
+				<label for="urlGet">请输入图片链接:</label>
+				<input type="text" id="urlGet" name="urlGet" placeholder="如：http://www.xx.com/1.jpg">
+			</section>
+		</div>
+		<div class="tips t1">
+			使用链接时请注意图片是否是外链。目前仅支持：jpg|png|gif|bmp
+		</div>
+		<div class="tips t2">
+			当图片较大时，转png格式可能失败（作者表示他不知道原因Σ(ﾟдﾟlll)）。
+			如果有谁知道的话，欢迎在文章下面的评论留言，谢谢。
+		</div>
+	</section>
+</section>
+<footer id="footer">
+	<span>转换格式选择:</span>
+	<ul class="type_list">
+		<li class="bgAdd">JPG</li>
+		<li>PNG</li>
+	</ul>
+	<label for="quality">图片质量:</label>
+	<input id="quality" name="quality" type="number" min="10" max="100" step="10" value="50">
+	<button id="turnTo">转换</button>
+	<button id="download">下载</button>
+</footer>
+<a id="downIMG"></a>
+<script type="text/javascript" src="js/format.js"></script>
+</body>
+</html>
