@@ -199,8 +199,6 @@ var lvEffects = (function(){
 		* callback (function) : callback function
 		*/
 		transform3d : function(options,callback){
-			options = options || {};
-			callback = callback || function(){};
 			var elems = this.elements,
 				len = elems.length,
 				i = 0;
@@ -325,13 +323,14 @@ var lvEffects = (function(){
 		},
 
 		rotate3d : function(options,callback){
-			var x = options.x || 0,
-				y = options.y || 0,
-				z = options.z || 0,
-				angle = options.angle || 0,
-				tempObj = {};
+			var tempObj = {},
+				key,
+				upKey;
 
-			tempObj.rotate3d = "("+x+","+y+","+z+","+angle+")";
+			for( key in options ){
+				upKey = key.toUpperCase();
+				tempObj["rotate"+upKey] = options[key];
+			}
 
 			this.transform3d(tempObj,callback);
 
@@ -345,8 +344,7 @@ var lvEffects = (function(){
 
 		rotateX : function(angle,callback){
 			this.rotate3d({
-				x : 1,
-				angle : angle
+				x : angle
 			},callback);
 
 			return this;
@@ -354,8 +352,7 @@ var lvEffects = (function(){
 
 		rotateY : function(angle,callback){
 			this.rotate3d({
-				y : 1,
-				angle : angle
+				y : angle
 			},callback);
 
 			return this;
@@ -363,8 +360,7 @@ var lvEffects = (function(){
 
 		rotateZ : function(angle,callback){
 			this.rotate3d({
-				z : 1,
-				angle : angle
+				z : angle
 			},callback);
 
 			return this;
@@ -375,6 +371,8 @@ var lvEffects = (function(){
 				len = elems.length,
 				i = 0;
 
+			this.transitionEnd(callback);
+
 			for( ; i < len; i++ ){
 				elems[i].elem.style.cssText += "opacity:"+value;
 			}
@@ -384,49 +382,57 @@ var lvEffects = (function(){
 		//向目标元素3d变换进行赋值
 		//trans (string) : transform value
 		useTransform : function(ele,options){
-			var dataset = ele.lvEffectsData,
-				dTranslate3d = dataset.translate3d,
-				dScale3d = dataset.scale3d,
+			var dataset			= ele.lvEffectsData,
+				dTranslate3d 	= dataset.translate3d,
+				dScale3d 		= dataset.scale3d,
 				translate3d 	= options.translate3d 	||	dTranslate3d		||  "(0,0,0)",
 				scale3d 		= options.scale3d 	  	||  dScale3d 			||  "(1,1,1)",
-				rotate3d 		= options.rotate3d 	  	||  dataset.rotate3d 	||  "(0,0,0,0)",
-				getArray 		= lvEffects.getArrayFromVal,
+				rotate3d 		= dataset.rotate3d,
+				getArray 		= lvEffects.__getArrayFromVal,
 				translate3dVal 	= getArray(translate3d),
 				scale3dVal 		= getArray(scale3d),
-				rotate3dVal 	= getArray(rotate3d),
-				setTranslate3dVal,
-				setScale3dVal,
+				rotateVal 		= [],
+				setTranslate3dVal = dTranslate3d ? getArray(dTranslate3d) : [0,0,0],
+				setScale3dVal   = dScale3d ? getArray(dScale3d) : [1,1,1],
+				hasRotate = "rotateY" in options || "rotateX" in options || "rotateZ" in options,
 				trans,
-				angle,
 				i = 0;
 
-			setTranslate3dVal = dTranslate3d ? getArray(dTranslate3d) : [0,0,0];
-			setScale3dVal = dScale3d ? getArray(dScale3d) : [1,1,1];
-
-			for( ; i < 3; i++ ){
-				if(translate3dVal[i] == "none"){
-					translate3dVal[i] = setTranslate3dVal[i];
-				}
-				if(scale3dVal[i] == "none"){
-					scale3dVal[i] = setScale3dVal[i];
-				}
-			}
-
-			rotate3dVal[3] = rotate3dVal[3].replace(/deg/g,"");
-			angle = rotate3dVal[3] * 1;
+			translate3dVal = lvEffects.__clearPreVal("none",translate3dVal,setTranslate3dVal);
+			scale3dVal = lvEffects.__clearPreVal("none",scale3dVal,setScale3dVal);
 
 			dataset.translate3d = "("+translate3dVal.join(",")+")";
 			dataset.scale3d = "("+scale3dVal.join(",")+")";
-			dataset.rotate3d = rotate3d;
-				
-			var nextfix = translate3dVal[0].match(/\D+$/g) || "px";
-			for( var x = 0; x < 3; x++ ){
-				translate3dVal[x] += "px";
+
+			translate3dVal = lvEffects.__returnWithUnit(translate3dVal);
+
+			if(rotate3d && hasRotate){
+				rotateVal = rotate3d.split(" ");
+				for(var key in options ){
+					var nkey = new RegExp(key,"g");
+					for( var r=0; r < 3; r++ ){
+						if(nkey.test(rotateVal[r])){
+							rotateVal[r] = key + "(" + options[key] + ")";
+						}
+					}
+				}
+			} else if(hasRotate) {
+				options.rotateX = options.rotateX || "0deg";
+				options.rotateY = options.rotateY || "0deg";
+				options.rotateZ = options.rotateZ || "0deg";
+				for( var key in options ){
+					if(/rotate/g.test(key)){
+						rotateVal.push(key+"("+options[key]+")");
+					}
+				}
 			}
+
+			var tempStr = rotateVal.join(" ");
+			dataset.rotate3d = tempStr;
+
 			trans = "translate3d(" + translate3dVal.join(",") +
 					") scale3d("+ scale3dVal.join(",") + 
-					") rotate3d(" + rotate3dVal.join(",") + 
-					"deg)";
+					") "+tempStr;
 
 			this.eleAddTranform(ele,trans);
 		},
@@ -460,6 +466,8 @@ var lvEffects = (function(){
 				transitionend =  lvEffects.getTransitionEnd(),
 				eventHandle;
 
+			callback = callback || function(){};
+
 			eventHandle = function(e){
 				num++;
 				if(num == len){
@@ -474,6 +482,50 @@ var lvEffects = (function(){
 				var ele = elems[i].elem;
 				ele.addEventListener(transitionend,eventHandle,false);
 			}
+		},
+
+		/*********************animation***********************/
+		animate : function(options,callback){
+			var key;
+			for( key in options ){
+				this[key](options[key]);
+			}
+			this[key](options[key],callback);
+			return this;
+		},
+
+		__queueAnimate : function(arr,idx,callback){
+			var tempCallback = arr[idx].callback || function(){},
+				time = arr[idx].time,
+				_self = this;
+
+			delete arr[idx].callback;
+			delete arr[idx].time;
+
+			if(time){
+				this.createTransition({
+					duration : time
+				});
+			}
+
+			this.animate(arr[idx],function(){
+				idx++;
+				tempCallback();
+				if(arr[idx])
+				_self.__queueAnimate(arr,idx,callback)
+				else
+				callback();
+			});
+
+		},
+
+		queue : function(array,callback){
+			var len = array.length,
+				obj = {};
+			
+			this.__queueAnimate(array,0,callback);
+
+			return this;
 		}
 
 	};
@@ -551,7 +603,8 @@ var lvEffects = (function(){
 		return parent;
 	};
 
-	lvEffects.getArrayFromVal = function(val){
+	//获取“()”内的值并分解成数组:如(100,0,0)分解成[100,0,0]
+	lvEffects.__getArrayFromVal = function(val){
 		var valReg = /(-*(\w\.*)+\,)+-*(\w\.*)+/g;
 		return (val.match(valReg))[0].split(",");
 	};
@@ -567,6 +620,40 @@ var lvEffects = (function(){
 	/***************utils*****************/
 	lvEffects.trim = function(str){
 		return str.replace(/(^\s*)|(\s*$)/g,"");
+	};
+
+	//处理translate单位不规范的问题
+	lvEffects.__returnWithUnit = function(arr){
+		var len = arr.length,
+			i = 0,
+			nexfix,
+			result;
+		for( ; i < len; i++ ){
+			result = arr[i].match(/\D+/g);
+			if(result)
+			nexfix = result[0];
+			if(nexfix) break; else nexfix = "px";
+		}
+
+		for( i = 0; i < len; i++ ){
+			arr[i] = (arr[i]+"").replace(/\D+/g,"");
+			arr[i] += nexfix;
+		}
+		return arr;
+	};
+
+	//处理并替换相关预设值
+	lvEffects.__clearPreVal = function(val,sArr,tArr){
+		var len = sArr.length,
+			i = 0;
+
+		for( ; i < len; i++ ){
+			if(sArr[i] == val){
+				sArr[i] = tArr[i];
+			}
+		}
+
+		return sArr;
 	};
 
 	lvEffects.savePrevObjects = function(obj){

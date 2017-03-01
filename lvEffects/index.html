@@ -107,28 +107,36 @@ setTimeout(function(){
 	console.log(
 		lvEffects(".container")
 		.create3DStyle({
-			perspective:"500px"
+			perspective:"800px"
 		})
 		.createTransition({
-				property : "transform",
-				duration : "1000ms",
-				timing : "linear"
-		})
-		.translate3d({
-			x : 100
-		},function(e){
-			this.createTransition({property:"opacity,transform", duration:"1s,1s"}).scale(2);
+				property : "transform,opacity",
+				duration : "1000ms,200ms",
+				timing : "ease-out,linear",
+				delay  : "0ms,0ms"
 		})
 	);
-var temp = 1,temp2 = 0;
+var temp = 0,temp2 = 0,opa = 1;
 document.querySelector('.btn').onclick = function(e){
-	temp += 0.1;
-	lvEffects('.container').scaleX(temp);
+	temp += 30;
+	opa = Math.random().toFixed(1);
+	lvEffects('.container').animate({
+		rotateX : temp+"deg",
+		opacity : opa
+	},function(e){
+		console.log(e);
+	});
 };
 
 document.querySelector('.btn2').onclick = function(e){
 	temp2 += 60;
-	lvEffects('.container').rotateY(temp2);
+	opa = Math.random().toFixed(1);
+	lvEffects('.container').animate({
+		rotateY : temp2+"deg",
+		opacity : opa
+	},function(e){
+		console.log(e);
+	});
 };
 
 },3000);
