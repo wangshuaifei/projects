@@ -118,6 +118,7 @@ var lvEffects = (function(){
 		/*****************utils*******************/
 
 
+
 		/****************effects*****************/
 		//向目标元素的父元素附加3D效果
 		create3DStyle : function(options){
@@ -391,7 +392,7 @@ var lvEffects = (function(){
 				getArray 		= lvEffects.__getArrayFromVal,
 				translate3dVal 	= getArray(translate3d),
 				scale3dVal 		= getArray(scale3d),
-				rotateVal 		= [],
+				rotateVal 		= rotate3d ? rotate3d.split(" ") : [],
 				setTranslate3dVal = dTranslate3d ? getArray(dTranslate3d) : [0,0,0],
 				setScale3dVal   = dScale3d ? getArray(dScale3d) : [1,1,1],
 				hasRotate = "rotateY" in options || "rotateX" in options || "rotateZ" in options,
@@ -508,20 +509,20 @@ var lvEffects = (function(){
 				});
 			}
 
-			this.animate(arr[idx],function(){
+			this.animate(arr[idx],function(e){
 				idx++;
-				tempCallback();
+				tempCallback.call(this,e);
 				if(arr[idx])
 				_self.__queueAnimate(arr,idx,callback)
-				else
-				callback();
+				else{
+					callback.call(this,e);
+				}
+				
 			});
 
 		},
 
 		queue : function(array,callback){
-			var len = array.length,
-				obj = {};
 			
 			this.__queueAnimate(array,0,callback);
 
@@ -603,6 +604,19 @@ var lvEffects = (function(){
 		return parent;
 	};
 
+	lvEffects.getElemsWithInnerStyle = function(ele){
+		var clone = ele.cloneNode(true),
+			elems = ele.querySelectorAll("*"),
+			cloneElems = clone.querySelectorAll("*"),
+			i = 0, elem;
+		clone.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
+		lvEffects.__allToInnerStyle(ele,clone);
+		for( ; elem = elems[i++]; ){
+			lvEffects.__allToInnerStyle(elem,cloneElems[i-1]);
+		}
+		return clone;
+	};
+
 	//获取“()”内的值并分解成数组:如(100,0,0)分解成[100,0,0]
 	lvEffects.__getArrayFromVal = function(val){
 		var valReg = /(-*(\w\.*)+\,)+-*(\w\.*)+/g;
@@ -654,6 +668,24 @@ var lvEffects = (function(){
 		}
 
 		return sArr;
+	};
+
+	//将元素节点的所有样式变为内联样式，为svg绘制做准备
+	lvEffects.__allToInnerStyle = function(ele,cloneDom){
+		var style = window.getComputedStyle ? window.getComputedStyle(ele,"") : ele.currentStyle(),
+			temp = "",
+			key,
+			reg = /br|img|input/g;
+		
+		if(reg.test(ele.tagName.toLowerCase())){
+			return;
+		}
+
+		for( key in style ){
+			if(style[key] && style[key] !== 0)
+			temp += (key + ":" + style[key]);
+		}
+		cloneDom.style.cssText += temp;
 	};
 
 	lvEffects.savePrevObjects = function(obj){
@@ -718,6 +750,31 @@ var lvEffects = (function(){
 		}
 
 		return resultArr;
+	};
+
+	lvEffects.drawHtmlToCanvas = function(canvas,html){
+		var	clone = lvEffects.getElemsWithInnerStyle(html),
+			w = canvas.width,
+			h = canvas.height,
+			data = '<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'px" height="'+h+'px" >'+
+					'<foreignObject width="100%" height="100%">'+
+						clone.outerHTML+
+					'</foreignObject>'+
+					'</svg>',
+			svg = new Blob([data],{ type : "image/svg+xml;charset=utf-8"}),
+			cxt = canvas.getContext("2d"),
+			URL = window.URL || window.webkitURL || window,
+			img = new Image(),
+			imgUrl = URL.createObjectURL(svg);
+
+		console.log(clone.outerHTML);
+
+		img.onload = function(){
+			cxt.drawImage(img,0,0);
+			URL.revokeObjectURL(imgUrl);
+		};
+
+		img.src= imgUrl;
 	};
 
 	//创建3d矩阵
