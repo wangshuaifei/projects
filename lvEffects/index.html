@@ -73,14 +73,6 @@
 	background: rgba(12,94,53,1);
 }
 
-.gg-test{
-	width: 600px;
-	height: 300px;
-	background: #666;
-}
-.dd{
-	background: #6cf;
-}
 </style>
 </head>
 <body>
@@ -104,23 +96,23 @@
 		66
 	</div>
 </div>
-<div class="gg-test">
-	hello,worldsadsadsad
-	<div class="dd">
-		as
-	</div>
-	<p>asdsad</p>
-</div>
-<div class="another"></div>
+
 <script type="text/javascript">
-var html = document.querySelector(".gg-test"),
-	canvas = document.createElement("canvas");
-
-canvas.width = 600;
-canvas.height = 300;
-
-lvEffects.drawHtmlToCanvas(canvas,html);
-document.querySelector(".another").appendChild(canvas);
+var rx = 0,ry = 0,opa = 1;
+setInterval(function(){
+	rx += 10;
+	ry += 20;
+	opa = (Math.random() * 0.5 + 0.5).toFixed(1);
+	lvEffects('.container').create3DStyle().createTransition({
+		property : "transform,opacity",
+		duration : "160ms,160ms",
+		timing : "linear,linear"
+	}).animate({
+		rotateX : rx + "deg",
+		rotateY : ry + "deg",
+		opacity : opa
+	});
+},160);
 </script>
 </body>
 </html>
