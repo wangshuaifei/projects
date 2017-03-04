@@ -10,7 +10,6 @@ var Page = function(options){
 		pagelist : [{
 			"name" : "图片",
 			"id" : "images",
-			"sourceLoad" : false,
 			"pageCache" : "",
 			"callback" : function(pageDom){
 				
@@ -48,7 +47,7 @@ Page.prototype = {
 			transitionEnd = "transitionEnd" in document ? "transitionEnd" : "webkitTransitionEnd";
 
 		$(this.menu).on('click',function(e){
-			$('#all-wrapper').addClass('mode-active');
+			$('#all-wrapper').toggleClass('mode-active');
 		});
 
 		$(this.menuLink).on('click',function(e){

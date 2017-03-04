@@ -8,7 +8,11 @@ html,body{
 	position: relative;
 	overflow: hidden;
 	perspective: 10rem;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
 }
+
+/********************pages**********************/
 
 #all-wrapper{
 	max-width: 6.25rem;
@@ -50,10 +54,10 @@ html,body{
 	left: -90%;
 	top: 0;
 	z-index: 0;
-	-webkit-transition:-webkit-transform 0.6s ease-in 0.1s;
-	-moz-transition:-moz-transform 0.6s ease-in 0.1s;
-	-o-transition:-o-transform 0.6s ease-in 0.1s;
-	transition:transform 0.6s ease-in 0.1s;
+	-webkit-transition:-webkit-transform 0.3s ease-in;
+	-moz-transition:-moz-transform 0.3s ease-in;
+	-o-transition:-o-transform 0.3s ease-in;
+	transition:transform 0.3s ease-in;
 }
 
 .mode-active #menupage{
@@ -66,6 +70,11 @@ html,body{
 #homepage{
 	background: #c0c0c0;
 	height: 100%;
+}
+
+
+.mode-active #homepage{
+	box-shadow: 0rem 0rem 0.3rem rgba(134,103,103,0.8);
 }
 
 #page-box{
@@ -103,7 +112,35 @@ html,body{
 	transform: translate3d(-100%,0,0);
 }
 
-/************************/
+/************utils************/
+.page-header{
+	position: relative;
+	height: 0.8rem;
+	background: #66ccff;
+}
+
+.menu,.back{
+	position: absolute;
+	left: 0.25rem;
+	width: 0.6rem;
+	height: 0.6rem;
+	top: 0.1rem;
+	font-size: 0.2rem;
+	line-height: 0.7rem;
+	z-index: 10;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);  
+	-webkit-tap-highlight-color: transparent;
+}
+
+.page-title{
+	position: relative;
+	height: 100%;
+	text-align: center;
+	color: #fff;
+	line-height: 0.8rem;
+	font-size: 0.3rem;
+}
+
 #page-menu{
 	position: relative;
 	height: auto;
@@ -120,10 +157,10 @@ html,body{
 .page-frame{
 	width: 100%;
 	min-height: 100%;
-	-webkit-transition:-webkit-transform 0.3s ease-in;
-	-moz-transition:-moz-transform 0.3s ease-in;
-	-o-transition:-o-transform 0.3s ease-in;
-	transition:transform 0.3s ease-in;
+	-webkit-transition:-webkit-transform 0.3s ease-in 1.3s;
+	-moz-transition:-moz-transform 0.3s ease-in 1.3s;
+	-o-transition:-o-transform 0.3s ease-in 1.3s;
+	transition:transform 0.3s ease-in 1.3s;
 }
 
 
@@ -141,4 +178,24 @@ html,body{
 
 .lazy-img[data-status="loaded"]{
 	margin-top: 0rem;
+}
+
+
+/***************************/
+@font-face {
+  font-family: "page-icon-font";
+  src: url('../fonts/iconfont.eot?t=1488527033216'); /* IE9*/
+  src: url('../fonts/iconfont.eot?t=1488527033216#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../fonts/iconfont.woff?t=1488527033216') format('woff'), /* chrome, firefox */
+  url('../fonts/iconfont.ttf?t=1488527033216') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('../fonts/iconfont.svg?t=1488527033216#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.menu:before{
+	font-family: "page-icon-font";
+	content: "\e61e";
+	position: absolute;
+	font-size: 0.4rem;
+	color: #fff;
+	top: -0.04rem;
 }
