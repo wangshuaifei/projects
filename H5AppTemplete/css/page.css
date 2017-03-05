@@ -199,3 +199,12 @@ html,body{
 	color: #fff;
 	top: -0.04rem;
 }
+
+.back:before{
+	font-family: "page-icon-font";
+	content: "\e616";
+	position: absolute;
+	font-size: 0.4rem;
+	color: #fff;
+	top: -0.04rem;
+}
