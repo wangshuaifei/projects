@@ -85,6 +85,7 @@ html,body{
 	top: 0rem;
 	z-index: 2;
 	background: #a34c5e;
+	overflow: hidden;
 	-webkit-transition:-webkit-transform 0.3s ease-in;
 	-moz-transition:-moz-transform 0.3s ease-in;
 	-o-transition:-o-transform 0.3s ease-in;
@@ -145,24 +146,40 @@ html,body{
 	position: relative;
 	height: auto;
 	background: #99cc00;
+	z-index: 1;
 }
 
 #page-detail{
 	position: absolute;
+	display: block;
 	left: 100%;
-	top: 0;
+	top: 0rem;
 	background: #bb88aa;
+	z-index: 2;
 }
 
 .page-frame{
 	width: 100%;
 	min-height: 100%;
-	-webkit-transition:-webkit-transform 0.3s ease-in 1.3s;
-	-moz-transition:-moz-transform 0.3s ease-in 1.3s;
-	-o-transition:-o-transform 0.3s ease-in 1.3s;
-	transition:transform 0.3s ease-in 1.3s;
+	-webkit-transition:-webkit-transform 0.3s ease-in;
+	-moz-transition:-moz-transform 0.3s ease-in;
+	-o-transition:-o-transform 0.3s ease-in;
+	transition:transform 0.3s ease-in;
 }
 
+.detail-normal{
+	-webkit-transform: translate3d(0%,0,0);
+	-o-transform: translate3d(0%,0,0);
+	-moz-transform: translate3d(0%,0,0);
+	transform: translate3d(0%,0,0);
+}
+
+.detail-active{
+	-webkit-transform: translate3d(-100%,0,0);
+	-o-transform: translate3d(-100%,0,0);
+	-moz-transform: translate3d(-100%,0,0);
+	transform: translate3d(-100%,0,0);
+}
 
 .img-item{
 	max-width: 2rem;

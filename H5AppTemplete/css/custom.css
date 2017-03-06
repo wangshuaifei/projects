@@ -85,6 +85,10 @@ img{
 	content: "\e63f";
 }
 
+.li-comments:before{
+	content: "\e642";
+}
+
 .menu-box li:after{
 	content: "";
 	position: absolute;
