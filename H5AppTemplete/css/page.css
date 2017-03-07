@@ -113,35 +113,6 @@ html,body{
 	transform: translate3d(-100%,0,0);
 }
 
-/************utils************/
-.page-header{
-	position: relative;
-	height: 0.8rem;
-	background: #66ccff;
-}
-
-.menu,.back{
-	position: absolute;
-	left: 0.25rem;
-	width: 0.6rem;
-	height: 0.6rem;
-	top: 0.1rem;
-	font-size: 0.2rem;
-	line-height: 0.7rem;
-	z-index: 10;
-	-webkit-tap-highlight-color: rgba(0,0,0,0);  
-	-webkit-tap-highlight-color: transparent;
-}
-
-.page-title{
-	position: relative;
-	height: 100%;
-	text-align: center;
-	color: #fff;
-	line-height: 0.8rem;
-	font-size: 0.3rem;
-}
-
 #page-menu{
 	position: relative;
 	height: auto;
@@ -150,10 +121,9 @@ html,body{
 }
 
 #page-detail{
-	position: absolute;
-	display: block;
+	position: fixed;
 	left: 100%;
-	top: 0rem;
+	top: 0%;
 	background: #bb88aa;
 	z-index: 2;
 }
@@ -179,6 +149,35 @@ html,body{
 	-o-transform: translate3d(-100%,0,0);
 	-moz-transform: translate3d(-100%,0,0);
 	transform: translate3d(-100%,0,0);
+}
+
+/************utils************/
+.page-header{
+	position: relative;
+	height: 0.8rem;
+	background: #66ccff;
+}
+
+.menu,.back{
+	position: absolute;
+	left: 0.25rem;
+	width: 0.6rem;
+	height: 0.6rem;
+	top: 0.1rem;
+	font-size: 0.2rem;
+	line-height: 0.7rem;
+	z-index: 1;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);  
+	-webkit-tap-highlight-color: transparent;
+}
+
+.page-title{
+	position: relative;
+	height: 100%;
+	text-align: center;
+	color: #fff;
+	line-height: 0.8rem;
+	font-size: 0.3rem;
 }
 
 .img-item{
