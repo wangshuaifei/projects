@@ -102,3 +102,9 @@ img{
 .menulink{
 	color: #fff;
 }
+
+.img-other:after{
+	clear: both;
+	content: "";
+	display: block;
+}

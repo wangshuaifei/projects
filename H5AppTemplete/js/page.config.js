@@ -12,8 +12,13 @@ var pageConfig = {
 			"sources" : [{
 				"wrapper":".img-other",
 				"callback" : function(data){
-					var temp = '<li class="img-item"><img src="images/loading.gif" data-origin="images/1.png" class="lazy-img" data-status="unload" /></li>'+
+					var temp = '';
+					
+					for( var i = 0; i < 10; i++ ){
+						temp += '<li class="img-item"><img src="images/loading.gif" data-origin="images/1.png" class="lazy-img" data-status="unload" /></li>'+
 						'<li class="img-item"><img src="images/loading.gif" data-origin="images/2.jpg" class="lazy-img" data-status="unload" /></li>';
+					}
+
 					return temp;
 				}
 			},{

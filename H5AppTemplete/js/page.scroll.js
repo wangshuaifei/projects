@@ -6,9 +6,9 @@ var Scroll = function(selector,options){
 	options = options || {};
 	this.selector = selector;
 	this.usePullDownFresh 	= options.pulldownFresh || false; 	//下拉刷新
-	this.downHeight			= options.downHeight	|| 20;		//下拉刷新触发距离
+	this.downHeight			= options.downHeight	|| 20;		//下(右)拉刷新触发距离
 	this.usePullUpFresh 	= options.pullUpFresh 	|| false; 	//上拉刷新
-	this.upHeight			= options.upHeight		|| 20;		//上拉刷新触发距离
+	this.upHeight			= options.upHeight		|| 20;		//上(左)拉刷新触发距离
 	this.scrollBar 			= options.scrollBar 	|| false;  	//显示滚动条
 	this.fadeScrollBar		= options.fadeBar 		|| false;	//停止动画时是否隐藏滚动条
 	this.dragBar			= options.dragBar		|| true;	//是否能拖动滚动条
@@ -72,20 +72,19 @@ Scroll.prototype = {
 
 	//下拉刷新
 	updatePage : function(direc,callback){
-		if(direc == "x")
-		this.updatePageX(callback);
-		else
-		this.updatePageY(callback);
-	},
-
-	updatePageY : function(callback){
-
 		if(!this.usePullDownFresh)
 		return false;
 
-		var _self = this;
-
 		callback = callback || function(){};
+
+		if(direc == "x")
+		this.__updatePageX(callback);
+		else
+		this.__updatePageY(callback);
+	},
+
+	__updatePageY : function(callback){
+		var _self = this;
 
 		this.scrolling(function(){
 			if( this.y >= _self.downHeight ){
@@ -96,22 +95,44 @@ Scroll.prototype = {
 
 	},
 
-	//上拉加载
-	update : function(direc,callback){
-		if(direc == "x")
-		this.updateX(callback);
-		else
-		this.updateY(callback);
+	__updatePageX : function(callback){
+		var _self = this;
+
+		this.scrolling(function(){
+			if( this.x >= _self.downHeight ){
+				callback(this);
+				_self.refresh();
+			}
+		});
 	},
 
-	updateY : function(callback){
+	//上拉加载
+	update : function(direc,callback){
 		if(!this.usePullUpFresh)
 		return false;
 
+		if(direc == "x")
+		this.__updateX(callback);
+		else
+		this.__updateY(callback);
+	},
+
+	__updateY : function(callback){
 		var _self = this;
 
 		this.scrolling(function(){
 			if( this.y <= this.maxScrollY - _self.upHeight ){
+				callback(this);
+				_self.refresh();
+			}
+		});
+	},
+
+	__updateX : function(callback){
+		var _self = this;
+
+		this.scrolling(function(){
+			if( this.x <= this.maxScrollX - _self.upHeight ){
 				callback(this);
 				_self.refresh();
 			}

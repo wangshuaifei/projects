@@ -4,14 +4,14 @@ require.config({
 		"jquery" : "plugs/jquery.min",		//jquery
 		"swiper" : "plugs/swiper.min",		//swiper
 		"iscroll" : "plugs/iscroll-probe",	//iscroll
-		"hammer" : "plugs/hammer.min",	//hammer
+		"hammer" : "plugs/hammer.min",		//hammer
 		"pageConfig" : "./page.config", 	//页面配置代码
 		"pageScroll" : "./page.scroll", 	//整合iscroll.js
-		"pageSwiper" : "./page.swiper",		//整合hammer.js
+		"pageHand" : "./page.hands",		//整合hammer.js
 		"page" : "./page.proto"				//主代码
 	},
 	shim : {
-		"pageSwiper" : {
+		"pageHand" : {
 			deps : ["hammer"]
 		},
 		"pageScroll" : {
@@ -19,7 +19,7 @@ require.config({
 			exports : "Scroll"
 		},
 		"page" : {
-			deps : ["jquery","swiper","pageScroll","pageSwiper","pageConfig"],
+			deps : ["jquery","swiper","pageScroll","pageHand","pageConfig"],
 			exports : "Page"
 		}
 	}

@@ -1,4 +1,4 @@
-define(['jquery','swiper','pageScroll','pageSwiper','pageConfig'],function($,Swiper,Scroll,myHand,config){
+define(['jquery','swiper','pageScroll','pageHand','pageConfig'],function($,Swiper,Scroll,myHand,config){
 
 var Page = function(options){
 	options = options || {};
@@ -11,11 +11,10 @@ var Page = function(options){
 	this.path = this.local.substring(0,this.local.lastIndexOf("/")+1);
 	this.pages = config.menuPage;
 	this.detailPages = config.detailPage;
-
 	this.ev = "ontouchstart" in document ? "touchend" : "click";
+	this.__created = false; //用于在页面完全加载后控制相关的功能创建
 
 	this.init();
-
 };
 
 Page.prototype = {
@@ -26,14 +25,36 @@ Page.prototype = {
 
 	eventListen : function(){
 		var _self = this,
-			ev = this.ev,
 			transitionEnd = "transitionEnd" in document ? "transitionEnd" : "webkitTransitionEnd";
 
-		$(this.menu).on(ev,function(e){
+		//hands
+		var homeHand = new myHand("#homepage");
+		
+		homeHand.swipeLeft(function(ev){
+			$('#all-wrapper').removeClass('mode-active');
+		});
+		homeHand.swipeRight(function(ev){
+			$('#all-wrapper').addClass('mode-active');
+		});
+
+		var menuHand = new myHand("#page-menu");
+
+		menuHand.swipeRight(function(ev){
+			_self.closePage("menu");
+		});
+
+		var detailHand = new myHand("#page-detail");
+
+		detailHand.swipeRight(function(ev){
+			_self.closePage("detail");
+		});
+		//hands end
+
+		$(this.menu).on("click",function(e){
 			$('#all-wrapper').toggleClass('mode-active');
 		});
 
-		$(this.menuLink).on(ev,function(e){
+		$(this.menuLink).on("click",function(e){
 			e.preventDefault();
 			e.stopPropagation();
 
@@ -43,7 +64,7 @@ Page.prototype = {
 			_self.loadProxyPages(linkID,pagelist,"menu");
 		});
 
-		$(this.back).on(ev,function(e){
+		$(this.back).on("click",function(e){
 			var flag = $(this).attr("data-flag");
 			_self.closePage(flag);
 		});
@@ -91,6 +112,8 @@ Page.prototype = {
 	loadPages : function(id,page,type){
 		var cache = page.pageCache,
 			_self = this;
+
+		this.__created = false;
 
 		if(cache){
 			_self.end(page,cache);
@@ -152,6 +175,7 @@ Page.prototype = {
 			_self = this;
 			
 		if(imgObj.length == 0){
+			if(!this.__created) this.createFn();
 			return;
 		}
 		
@@ -195,6 +219,7 @@ Page.prototype = {
 		var status = $(wrapper).attr('data-status');
 		if(status == "hide"){
 			$(wrapper).attr('data-status',"show");
+			this.__triggerWrap = wrapper;
 			this.lazyloadImages();
 		} else {
 			$(wrapper).attr('data-status',"hide");
@@ -214,7 +239,6 @@ Page.prototype = {
 		this.menuPageLoadEnd(pageDom);
 		this.resetPage();
 		this.detailPageEventListen();
-		this.createScroll();
 		page.callback(pageDom);
 	},
 
@@ -239,10 +263,22 @@ Page.prototype = {
 	//创建页面滚动
 	createScroll : function(){
 		//创建iscroll
-		var tempScroll = new Scroll('#page-menu .page-wrapper', {
+		var tempScroll = new Scroll(this.__triggerWrap + ' .page-wrapper', {
 		    mouseWheel: true,
 		    scrollBar: true
 		});
+
+	},
+
+	//创建元素滑动
+	createSwiper : function(){
+
+	},
+
+	//创建页面功能
+	createFn : function(){
+		this.createScroll();
+		this.__created = true;
 	}
 
 };
