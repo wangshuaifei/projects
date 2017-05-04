@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CSS3 弹幕</title>
+<link rel="stylesheet" type="text/css" href="css/css3DM.css">
+</head>
+<body>
+<button class="btn">go</button>
+<!--dom-->
+<div class="css3DM-wrapper">
+	<div class="css3DM-videoBox">
+		<video src="STYX HELIX.mp4" loop="loop"></video>
+	</div>
+	<div class="css3DM-DMBox"></div>
+</div>
+<!--end-->
+<script type="text/javascript" src="js/css3DM.js"></script>
+<script type="text/javascript">
+document.querySelector(".btn").onclick = function(e){
+	var DM = new css3DM();
+	DM.init();
+	setInterval(function(){
+		DM.addDatas([{
+			img : "1.jpg",
+			text : "我是弹幕加的"
+		},{
+			img : "1.jpg",
+			text : "我是弹幕加的"
+		},{
+			img : "1.jpg",
+			text : "我是弹幕加的"
+		}]);
+	},1000);
+};
+</script>
+</body>
+</html>
