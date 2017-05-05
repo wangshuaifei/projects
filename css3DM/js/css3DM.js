@@ -2,8 +2,13 @@
 
 var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
-var css3DM = function(){
+var css3DM = function(opts){
+	opts = opts || {};
+	this.height = opts.height || 40; 	//css中每条弹幕的高度，默认40
+	this.paddingTop = opts.paddingTop || 10; //第一行距顶部的距离
+	this.space = opts.space || 10; //弹幕间的间距
 
+	this.wrapper = document.querySelector('.css3DM-DMBox');
 };
 
 css3DM.prototype = {
@@ -12,8 +17,51 @@ css3DM.prototype = {
 		this.rowArray = []; 	//行
 		this.TplArray = []; //目前已有的弹幕模板
 
-		this.wrapper = document.querySelector('.css3DM-DMBox');
+		this.getWrapperSize();
 		this.getData();
+	},
+
+	//获取容器size
+	getWrapperSize : function(){
+		var wrapper = this.wrapper;
+		this.wrapperWidth = wrapper.clientWidth;
+		this.wrapperHeight = wrapper.clientHeight;
+		this.countRow();
+	},
+
+	//进入全屏
+	enterFullScreen : function(){
+		this.wrapperWidth = window.screen.width;
+		this.wrapperHeight = window.screen.height;
+		this.countRow();
+	},
+
+	//计算row数
+	countRow : function(){
+		this.rowNum = ( ( this.wrapperHeight - this.paddingTop ) / (this.height + this.space) ) >> 0;
+		this.setRow();
+	},
+
+	//设置row
+	setRow : function(){
+		this.rowArray = [];
+		for( var j = 0; j < this.rowNum; j++ ){
+			this.rowArray.push({
+				rid : j+1,
+				using : false
+			});
+		}
+	},
+
+	//获取空闲行
+	getRow : function(){
+		for( var i = 0 , row; row = this.rowArray[i++]; ){
+			if( !row.using ){
+				return row;
+			}
+		}
+
+		return false;
 	},
 
 	//获取数据
@@ -30,14 +78,6 @@ css3DM.prototype = {
 			this.DMArray.push(obj);
 		}
 
-		//7行
-		for( var j = 0; j < 7; j++ ){
-			this.rowArray.push({
-				rid : j+1,
-				using : false
-			});
-		}
-
 		this.loop();
 	},
 
@@ -51,17 +91,6 @@ css3DM.prototype = {
 		this.DMArray = this.DMArray.concat(arr);
 	},
 
-	//获取空闲行
-	getRow : function(){
-		for( var i = 0 , row; row = this.rowArray[i++]; ){
-			if( !row.using ){
-				return row;
-			}
-		}
-
-		return false;
-	},
-
 	//开始显示弹幕
 	showDM : function(){
 		var DM = this.DMArray.shift();
@@ -70,13 +99,13 @@ css3DM.prototype = {
 		
 		var row,tpl,div;
 
-		row = this.getRow() || { rid : ((1 + Math.random() * 7) >> 0), using : false, fast: true };
+		row = this.getRow() || { rid : ((1 + Math.random() * this.rowNum) >> 0), using : false, fast: true };
 		row.using = true;
 		div = document.createElement("div");
 		div.className = "css3DM-DMList";
 		div.setAttribute("data-type","end");
 		div.setAttribute("data-status","stop");
-		div.setAttribute("data-row",row.rid);
+		div.style.top = ( this.height + this.space ) * (row.rid - 1) + this.paddingTop + "px";
 
 		tpl = '<div class="css3DM-DMphoto">'+
 				'<img src="'+DM.img+'" />'+
@@ -107,9 +136,17 @@ css3DM.prototype = {
 				},false);
 				ele.setAttribute("data-type",type);
 				ele.setAttribute("data-status","running");
-				setTimeout(function(){
-					row.using = false;
-				},3000);
+				var width = ele.querySelector(".css3DM-DMtext").clientWidth + this.height,
+					pos,timer;
+				timer = setTimeout(function(){
+					pos = ele.getBoundingClientRect().left;
+					if(_self.wrapperWidth > pos + width){
+						row.using = false;
+						clearTimeout(timer);
+						return false;
+					}
+					setTimeout(arguments.callee,1000);
+				},1500);
 			};
 		} else {
 			this.listen = function(ele,row){
@@ -121,9 +158,17 @@ css3DM.prototype = {
 				},false);
 				ele.setAttribute("data-type",type);
 				ele.setAttribute("data-status","running");
-				setTimeout(function(){
-					row.using = false;
-				},3000);
+				var width = ele.querySelector(".css3DM-DMtext").clientWidth + this.height,
+					pos,timer;
+				timer = setTimeout(function(){
+					pos = ele.getBoundingClientRect().left;
+					if(_self.wrapperWidth > pos + width){
+						row.using = false;
+						clearTimeout(timer);
+						return false;
+					}
+					setTimeout(arguments.callee,1000);
+				},1500);
 			};
 		}
 
@@ -132,6 +177,7 @@ css3DM.prototype = {
 
 	//结束滚动以后
 	end : function(ele,row){
+		ele.style.display = "none";
 		this.wrapper.removeChild(ele);
 	},
 
