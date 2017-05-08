@@ -12,7 +12,7 @@
 <div class="css3DM-container">
 	<div class="css3DM-wrapper">
 		<div class="css3DM-videoBox">
-			<video src="STYX HELIX.mp4" loop="loop"></video>
+			<video src="STYX_HELIX.mp4" loop="loop"></video>
 		</div>
 		<div class="css3DM-DMBox"></div>
 	</div>
@@ -20,14 +20,37 @@
 <!--end-->
 <script type="text/javascript" src="js/css3DM.js"></script>
 <script type="text/javascript">
-var DM = new css3DM();
+var DM = new css3DM(),
+	xhr = new XMLHttpRequest(),
+	isSearching = false,
+	idx = 0;
+	xhr.responseType = "json";
 document.querySelector(".btn").onclick = function(e){
 	DM.init();
 	setInterval(function(){
-		DM.addDatas([{
-			img : "1.jpg",
-			text : "我是弹幕加的"
-		}]);
+		if(isSearching) return false;
+		isSearching = true;
+
+		var fd = new FormData();
+		xhr.open("post","/getmessage.action");
+		xhr.onload = function(){
+			var res = xhr.response,
+				data = res.resultarray,
+				tempArray = [];
+
+			for( var i = 0, len = data.length; i < len; i++ ){
+				var tempObj = {};
+				tempObj.img = "1.jpg";
+				tempObj.text = data[i].strmessage;
+				tempArray.push(tempObj);
+			}
+
+			DM.addDatas(tempArray);
+			idx = res.intid;
+			isSearching = false;
+		};
+		fd.append("intid",idx);
+		xhr.send(fd);
 	},1000);
 	document.querySelector("video").play();
 };

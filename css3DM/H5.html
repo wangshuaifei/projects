@@ -9,14 +9,16 @@
 .box{
 	position: relative;
 	height: auto;
-	max-width: 90%;
+	max-width: 90%; 
 	margin: 0 auto;
 }
+
 .box:after{
 	clear: both;
 	display: block;
 	content: "";
 }
+
 #send{
 	position: relative;
 	display: block;
@@ -29,6 +31,7 @@
 	box-sizing: border-box;
 	float: left;
 }
+
 #btn{
 	position: relative;
 	height: auto;
@@ -48,7 +51,20 @@
 	<div id="btn">确定</div>
 </div>
 <script type="text/javascript">
-
+var sending = false;
+document.querySelector("#btn").onclick = function(e){
+	if(sending) return false;
+	var val = document.getElementById("send").value;
+	var formData = new FormData(),
+		xhr = new XMLHttpRequest();
+	formData.append("text",val);
+	xhr.open("post","/Insertmessage.action");
+	xhr.onload = function(e){
+		sending = false;
+	};
+	xhr.send(formData);
+	sending = true;
+};
 </script>
 </body>
 </html>
