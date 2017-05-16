@@ -3,7 +3,7 @@
 	height: auto;
 	min-width: 300px;
 	font-family: "Microsoft Yahei";
-	width: 640px;
+	max-width: 640px;
 }
 
 /*emoji header*/
@@ -15,6 +15,7 @@
 	-webkit-box-sizing:border-box;
 	box-sizing: border-box;
 	border: 1px solid #c0c0c0;
+	font-size: 16px;
 }
 
 .wEmoji-header:after{
@@ -33,6 +34,10 @@
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	display: none;
+}
+
+.wEmoji-prev-btn:hover,.wEmoji-next-btn:hover{
+	cursor: pointer;
 }
 
 .wEmoji-prev-btn{
@@ -62,6 +67,8 @@
 .wEmoji-row{
 	position: relative;
 	height: 100%;
+	-webkit-transition: -webkit-transform 0.6s ease-out;
+	transition: transform 0.6s ease-out;
 }
 
 .wEmoji-list{
@@ -73,6 +80,16 @@
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	border-right: 1px solid #c0c0c0;
+}
+
+.wEmoji-list:hover{
+	cursor: pointer;
+	opacity: 0.9;
+}
+
+.wEmoji-list[data-choose="true"]{
+	background: #50B1C7;
+	color: #fff;
 }
 
 .wEmoji-nav .wEmoji-list:nth-child(4n){
@@ -99,6 +116,13 @@
 .wEmoji-wrapper{
 	position: relative;
 	height: auto;
+	display: none;
+	-webkit-transition: -webkit-transform 0.6s ease-out;
+	transition: transform 0.6s ease-out;
+}
+
+.wEmoji-wrapper[data-choose="true"]{
+	display: block;
 }
 
 .wEmoji-wrapper:after{
@@ -136,4 +160,43 @@
 	max-width: 80%;
 	display: block;
 	margin: 0 auto;
+}
+
+.wEmoji-pages{
+	margin-top: 6px;
+	padding-top: 6px;
+	padding-left: 10px;
+	border-top: 1px solid #c0c0c0;
+	position: relative;
+	height: auto;
+}
+
+.wEmoji-pages:after{
+	display: block;
+	content: "";
+	clear: both;
+}
+
+.wEmoji-page-list{
+	position: relative;
+	float: left;
+	list-style: none;
+	padding: 6px 8px 6px 6px;
+	font-size: 16px;
+	text-decoration: underline;
+}
+
+.wEmoji-page-list[data-choose="true"]{
+	color: #6cf;
+}
+
+.wEmoji-page-list:hover{
+	cursor: pointer;
+	color: #6cf;
+}
+
+@media screen and (max-width: 360px){
+	.wEmoji-header{
+		font-size: 12px;
+	}
 }
