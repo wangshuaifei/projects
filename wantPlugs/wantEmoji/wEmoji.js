@@ -249,10 +249,14 @@ wantEmoji.prototype = {
 
 		content["on"+down] = function(e){
 			e = e || event;
-			e.stopPropagation();
-			e.preventDefault();
 			drag = true;
 			x = e.pageX || e.touches[0].pageX;
+		};
+
+		content["on"+move] = function(e){
+			e = e || event;
+			e.stopPropagation();
+			e.preventDefault();
 		};
 
 		content["on"+up] = function(e){

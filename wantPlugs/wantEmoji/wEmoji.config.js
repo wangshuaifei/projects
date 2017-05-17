@@ -1,6 +1,6 @@
 (function(window){
 
-var path = "http://localhost/OwnerProjects/wantPlugs/wantEmoji/",  //项目所在的根地址
+var path = "http://192.168.0.113/OwnerProjects/wantPlugs/wantEmoji/",  //项目所在的根地址
 	emojis = {
 	"paopao" : {
 		"name" : "泡泡", //名字
