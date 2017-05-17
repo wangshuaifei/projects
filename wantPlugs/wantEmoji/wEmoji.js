@@ -263,7 +263,7 @@ wantEmoji.prototype = {
 			e = e || event;
 			if(drag){
 				drag = false;
-				var endX = e.pageX || e.touches[0].pageX,
+				var endX = e.pageX || e.changedTouches[0].pageX,
 					dis = endX - x,
 					idx;
 
