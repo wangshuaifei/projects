@@ -5,16 +5,36 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
 <title>EMOJI</title>
 <link rel="stylesheet" type="text/css" href="wEmoji.css">
+<style type="text/css">
+#subText{
+	width: 300px;
+	height: 200px;
+}
+</style>
 </head>
 <body>
-
+<div class="content"></div>
+<textarea id="subText"></textarea>
+<button id="submit">提交</button>
 <div class="wrapper"></div>
+<div class="wrapper2"></div>
 <script type="text/javascript" src="wEmoji.config.js"></script>
 <script type="text/javascript" src="wEmoji.js"></script>
 <script type="text/javascript">
-new wantEmoji({
-	wrapper : ".wrapper"
+var text = document.querySelector("#subText");
+var we = new wantEmoji({
+	wrapper : ".wrapper",
+	callback : function(emojiCode){
+		text.value += emojiCode;
+	},
+	autoInit : true
 });
+
+document.querySelector("#submit").onclick = function(e){
+	var val = text.value;
+	document.querySelector(".content").innerHTML = we.explain(val);
+};
+
 </script>
 </body>
 </html>

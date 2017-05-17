@@ -1,12 +1,18 @@
+/*
+*	wEmoji v1.00
+*	date: 2017-05-17
+*	author: 孤月
+*	email: 454236029@qq.com | z454236029@gmail.com
+*/
 (function(){
 
 var wantEmoji = function(options){
 	options = options || {};
-	var selector = options.wrapper || "body";
+	var selector = options.wrapper || "body";  
 
-	this.wrapper = document.querySelector(selector);
-	this.row = options.row || 4;
-	this.callback = options.callback || function(){};
+	this.wrapper = document.querySelector(selector);	//包裹元素
+	this.row = options.row || 4;  						//每页表情的行数
+	this.callback = options.callback || function(){}; 	//当表情被点击时的回调，返回表情的code值
 
 	this.emojis = window.emojis;		//加载表情包配置
 
@@ -16,11 +22,12 @@ var wantEmoji = function(options){
 
 	this.activePage = 0;
 	this.totalPage = 0;
-	this.eachPartsNum = 4; 				//没一批显示的表情包数
+	this.eachPartsNum = 4; 				//每一批显示的表情包数(导航栏的表情包的最大显示个数)
 
 	this.wrapWidth = 0;
 	this.count = this.getEMJPackageCount();
 	
+	if(options.autoInit) //当设置了autoInit之后会自动调用init函数，默认不会
 	this.init();
 };
 
@@ -286,6 +293,7 @@ wantEmoji.prototype = {
 		targetList.setAttribute("data-choose","true");
 
 		this.currentWrapper = targetWrapper;
+		this.__createPageList();
 	},
 
 	//使当前显示的表情包的第n页显示
@@ -306,15 +314,18 @@ wantEmoji.prototype = {
 
 	//解释表情代码
 	explain : function(str){
-		var reg = /\[wem:(\w+):wem\]/g;
+		var reg = /\[wem:(\w+):wem\]/g,
+			_self = this;
 
-		str.replace(reg,function(target){
+		return str.replace(reg,function(str,target){
 			var tempArr = target.split("_"),
 				eid = tempArr.shift(),
-				type = tempArr.pop();
+				type = tempArr.pop(),
+				name = tempArr.join("_");
+				path = _self.emojis[eid].path;
+				url = name+"."+type;
 
-
-
+			return '<img src="'+path+url+'" />';
 		});
 	},
 
