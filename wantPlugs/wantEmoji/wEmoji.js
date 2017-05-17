@@ -14,7 +14,7 @@ var wantEmoji = function(options){
 	this.row = options.row || 4;  						//每页表情的行数
 	this.callback = options.callback || function(){}; 	//当表情被点击时的回调，返回表情的code值
 
-	this.emojis = window.emojis;		//加载表情包配置
+	this.emojis = window.emojis || emojis;		//加载表情包配置
 
 	this.content = null;   				//.wEmoji-content
 	this.navRow = null;					//.wEmoji-row
