@@ -4,6 +4,7 @@
 var Mota = {},
 	MotaSprites,  //Sprites类
 	stages = null, //保存所有场景
+	UI = null, //保存所有UI
 	currentStage,
 	canvas, //作用的canvas
 	unit, //地图单元size
@@ -19,6 +20,7 @@ Mota.initData = function(cv,data,Sprites,wrapper){
 
 	unit = data.unit || 60;
 	stages = data.stages || null;
+	UI = data.UI;
 	MotaSprites = Sprites;
 	UWNum = data.width;
 	UHNum = data.height;
@@ -145,6 +147,9 @@ Mota.Stage = (function(){
 
 		//生成背景
 		createBg();
+
+		//生成ui
+		createUI();
 
 		//生成敌人
 		createEnemies();
