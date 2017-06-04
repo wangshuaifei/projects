@@ -21,6 +21,7 @@ var msp = MotaSprites,
 
 var chars,    //活动对象类
 	background, //背景对象
+	UIBox,		//ui组件
 	cw, //画布宽度
 	ch, //画布高度
 	prev = 0, //上一次保存时间
@@ -43,6 +44,7 @@ msp.addGroup(mda.sprites,function(){
 	hero = mt.Character.addChar(mda.hero,"hero",true);//创建勇者
 	unit = mt.unit;
 	currentStage = mt.Stage.getCurrentStage();
+	UIBox = mt.Stage.getUIBox();
 
 	listen(); //绑定事件
 
@@ -218,6 +220,11 @@ function draw(cxt,background,chars,hero){
 	var chaArr = Object.getOwnPropertyNames(chars);
 	//绘制背景
 	cxt.drawImage(background,0,0);
+
+	var uiw = UIBox.width,
+		uih = UIBox.height;
+	//绘制UI
+	cxt.drawImage(UIBox,0,0,uiw,uih,unit,unit,uiw,uih);
 
 	//绘制勇者
 	var h_act = hero[hero.currentAction],

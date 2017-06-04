@@ -9,7 +9,11 @@ var MotaData = {
 	"width" : 20, //整个场景地图的size num * unit
 	"height" : 13,
 	"UI" : {
-		"scores" : {},
+		"scores" : {
+			"startPid" : "p_2",
+			"width" : 5,
+			"height" : 11
+		},
 		"dialog" : {}
 	},
 	"stages" : {

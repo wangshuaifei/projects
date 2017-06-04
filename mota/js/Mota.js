@@ -65,6 +65,7 @@ Mota.reset = function(){
 Mota.Stage = (function(){
 
 	var background,
+		UIBox,
 		stageChanged = true;
 
 	//生成背景
@@ -86,6 +87,31 @@ Mota.Stage = (function(){
 		ncxt.restore();
 
 		background = newCanvas;
+	};
+
+	//生成UI
+	var createUI = function(options){
+
+		if( !currentStage ) return false;
+		
+		options = options || {};
+
+		if(!options.changed) return false;
+
+		var uiCanvas = document.createElement("canvas"),
+			uicxt = uiCanvas.getContext("2d"),
+			scores = UI.scores,
+			width = scores.width * unit,
+			height = scores.height * unit;
+
+		uiCanvas.width = width;
+		uiCanvas.height = height;
+
+		uicxt.strokeStyle = "orange";
+		uicxt.fillStyle = "rgba(0,0,0,0.6)";
+		uicxt.fillRect(0,0,width,height);
+		uicxt.strokeRect(0,0,width,height);
+		UIBox = uiCanvas;
 	};
 
 	//生成敌人
@@ -149,7 +175,9 @@ Mota.Stage = (function(){
 		createBg();
 
 		//生成ui
-		createUI();
+		createUI({
+			changed : true
+		});
 
 		//生成敌人
 		createEnemies();
@@ -192,6 +220,10 @@ Mota.Stage = (function(){
 		return background;
 	};
 
+	var getUIBox = function(){
+		return UIBox;
+	};
+
 	return {
 		initStage : initStage,
 		nextStage : nextStage,
@@ -199,6 +231,7 @@ Mota.Stage = (function(){
 		prevStage : prevStage,
 		getCurrentStage : getCurrentStage,
 		getBackground : getBackground,
+		getUIBox : getUIBox,
 		stageChanged : stageChanged
 	};
 
