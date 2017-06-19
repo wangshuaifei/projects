@@ -19,12 +19,14 @@ class normalDM{
 			top : [],
 			bottom : []
 		};
+		this.leftTime = opts.leftTime || 2000;
 		this.space = opts.space || 10;
 		this.unitHeight = 0;
 		this.rowNum = 0;
 
 
 		this.startIndex = 0;
+		this.looped = false;
 
 		this.changeStyle(opts);
 	}
@@ -40,7 +42,7 @@ class normalDM{
 	//生成通道行
 	countRows(){
 		let unitHeight = parseInt(this.globalSize) + this.space;
-		let rowNum = ( (this.height - 40) / unitHeight ) >> 0;
+		let rowNum = ( (this.height - 20) / unitHeight ) >> 0;
 
 		let rows = this.rows;
 
@@ -80,6 +82,10 @@ class normalDM{
 	//添加
 	add(obj){
 		if(!obj) return;
+
+		if(this.looped)
+		this.countWidth([obj]);
+
 		this.save.push(obj);
 	}
 
@@ -100,15 +106,25 @@ class normalDM{
 	}
 
 	//启用全局样式
-	initStyle(){
-		this.font();
+	initStyle(cxt){
 
-		let cxt = this.cxt;
+		this.globalChanged = false;
+
+		this.font();
 
 		cxt.font = this.globalFont;
 		cxt.textBaseline = "middle";
 		cxt.fillStyle = this.globalColor;
 
+	}
+
+	//计算宽度
+	countWidth(items,cxt = this.cxt){
+		this.looped = true;
+		for( let [i,item] = [0]; item = items[i++]; ){
+			let w = cxt.measureText(item.text).width >> 0;
+			item.width = w;
+		}
 	}
 
 	//合并字体
@@ -130,17 +146,37 @@ class normalDM{
 		cxt.fillStyle = item.color || this.globalColor;
 	}
 
-	step(item,speed = item.speed){
+	//重置弹幕
+	reset(){
+		let items = this.save;
+		let [w,leftTime] = [this.width,this.leftTime];
+		for( let [i,item] = [0]; item = items[i++]; ){
+			if(item.type == "slide"){
+				item.x = w;
+			} else {
+				item.leftTime = leftTime
+			}
+			item.recovery = false;
+		}
+		this.startIndex = 0;
+	}
+
+	//计算
+	step(item){
 
 		let row = this.getRow(item);
 
-		speed = row.speedChange ? speed + ( Math.random() * 3 + 1 ) >> 0 : speed;
+		if(row.speedChange){
+			row.speedChange = false;
+			item.speed += ( Math.random() * 3 + 1 ) >> 0;
+		}
 
-		item.x -= speed;
+		item.x -= item.speed;
 		item.y = row.y;
 		item.row = row;
 	}
 
+	//绘制
 	draw(item,cxt){
 		cxt.save();
 		if( item.change ) {
@@ -150,6 +186,41 @@ class normalDM{
 		cxt.restore();
 	}
 
+	//回收弹幕
+	recovery(item,w){
+		
+		if( item.type == "slide" ){
+			item.recovery = this.recoverySlide(item,w);
+			return false;
+		}
+		
+		item.recovery = this.recoveryStatic(item);
+	}
+
+	recoverySlide(item,w){
+		if(item.x > -item.width)
+		return false;
+
+		return true;
+	}
+
+	recoveryStatic(item){
+		if(item.leftTime > 0 )
+		return false;
+
+		return true;
+	}
+
+	//更新下标和回收通道
+	refresh(items){
+		for( let [i,item] = [this.startIndex]; item = items[i++]; ){
+			if(!item.recovery) return false;
+			this.startIndex = i;
+			this.rows[item.type].push(item.row);
+			item.row = null;
+		}
+	}
+
 	update(w,h){
 
 		let items = this.save;
@@ -157,11 +228,16 @@ class normalDM{
 
 		cxt.clearRect(0,0,w,h);
 
-		this.globalChanged && this.initStyle();
+		this.globalChanged && this.initStyle(cxt);
+
+		!this.looped && this.countWidth(items);
+
+		this.refresh(items);
 
 		for( let [i,item] = [this.startIndex] ; item = items[i++]; ){
 			this.step(item);
 			this.draw(item,cxt);
+			this.recovery(item,w);
 		}
 
 	}
@@ -189,6 +265,7 @@ class DM {
 
 		//status
 		this.drawing = opts.auto || false;
+		this.startTime = new Date().getTime();
 
 		//fn
 		this[init]();
@@ -196,13 +273,18 @@ class DM {
 	}
 
 	initData(data = {}){
-		this.normal.add({
-			text : "hello",
-			x : this.width + 10,
-			y : 0,
-			speed : 2,
-			type : "slide"
-		});
+		let w = this.width;
+		for( let i = 0; i < 10; i++ ){
+			let obj = {
+				text : "hello"+i,
+				x : w + 10,
+				y : 0,
+				speed : 2,
+				type : "slide"
+			};
+
+			this.normal.add(obj);
+		}
 	}
 
 	[init](){
@@ -242,15 +324,17 @@ class DM {
 	}
 
 	//loop
-	[loop](normal = this.normal){
-
+	[loop](normal = this.normal,prev = this.startTime){
+		
 		if(!this.drawing){
 			return false;
 		}
 
+		let now = new Date().getTime();
+
 		normal.update(this.width,this.height);
 
-		requestAnimationFrame( () => { this[loop](normal); } );
+		requestAnimationFrame( () => { this[loop](normal,now); } );
 	}
 
 }
