@@ -19,6 +19,7 @@ class normalDM{
 			top : [],
 			bottom : []
 		}; //存放不同类型弹幕的通道数
+		this.filters = [];
 
 		this.leftTime = opts.leftTime || 2000;  //头部、底部静止型弹幕的是显示时长
 		this.space = opts.space || 10;  		//弹幕的行距
@@ -33,11 +34,133 @@ class normalDM{
 
 	}
 
+	//添加弹幕
+	add(obj){
+		if(!obj) return;
+
+		//如果已经可以计算文本宽度，则直接进行计算
+		if(this.looped)
+		this.countWidth([obj]);
+
+		this.filter(obj);
+
+		this.save.push(obj);
+	}
+
+	//清除所有弹幕
+	clear(){
+		this.save = [];
+		this.startIndex = 0;
+	}
+
+	//添加过滤
+	addFilter(key,val){
+		if(!key || !val) return false;
+		
+		this.filters.push({
+			"key" : key,
+			"value" : val
+		});
+	}
+
+	//过滤
+	filter(obj){
+		let filters = this.filters;
+		for( let res of filters ){
+			if( obj[res.key].includes(res.value) ){
+				obj.hide = true;
+				return false;
+			}
+		}
+
+	}
+
+	//合并字体
+	font(){
+		this.globalFont = this.globalStyle + 
+					" normal"+
+					" " + this.globalWeight + 
+					" " + this.globalSize + 
+					" " + this.globalFamily;
+	}
+
+	//改变全局样式
+	changeStyle(opts = {}){
+		
+		//文本属性保存
+		this.globalSize = opts.fontSize || this.globalSize || "24px";   //字体大小
+		this.globalFamily = opts.fontFamily || this.globalFamily || "微软雅黑"; //字体
+		this.globalStyle = opts.fontStyle || this.globalStyle || "normal"; //字体样式
+		this.globalWeight = opts.fontWeight || this.globalWeight || "normal"; //字体粗细
+		this.globalColor = opts.fontColor || this.globalColor || "#66ccff"; //字体颜色
+
+		//表示进行过一次全局样式变化
+		this.globalChanged = true;
+	}
+
+	//启用全局样式
+	initStyle(cxt){
+
+		this.globalChanged = false;
+
+		//合并font属性
+		this.font();
+
+		//更新全局样式
+		cxt.font = this.globalFont;
+		cxt.textBaseline = "middle";
+		cxt.fillStyle = this.globalColor;
+
+	}
+
+	//循环
+	update(w,h,time){
+
+		let [items,cxt] = [this.save,this.cxt];
+
+		cxt.clearRect(0,0,w,h);
+
+		this.globalChanged && this.initStyle(cxt); //初始化全局样式
+
+		!this.looped && this.countWidth(items); //计算文本宽度以及初始化位置（只执行一次）
+
+		this.refresh(items); //更新初始下标startIndex
+
+		let [i,item] = [this.startIndex];
+
+		for(  ; item = items[i++]; ){
+			this.step(item,time);
+			this.draw(item,cxt);
+			this.recovery(item,w);
+		}
+
+	}
+
+	//重置弹幕
+	reset(resetIndex = 0){
+
+		//resetIndex表示想要开始重置的弹幕的下标，系统想重置该值以后的弹幕
+		let [items, w, leftTime, i, item] = [this.save, this.width, this.leftTime, resetIndex];
+
+		for( ; item = items[i++]; ){
+			if(item.type == "slide"){
+				item.x = w;
+				item.rowRid = false;
+			} else {
+				item.leftTime = leftTime
+			}
+			item.recovery = false;
+		}
+		this.startIndex = resetIndex;
+	}
+
 	//更新canvas size
 	getSize(){
 
 		this.width = this.canvas.width;
 		this.height = this.canvas.height;
+
+		this.speedScale = this.width / 600;
 
 		this.countRows();
 	}
@@ -89,51 +212,7 @@ class normalDM{
 		};
 
 		//返回分配的通道
-		return row || rempRow;
-
-	}
-
-	//添加
-	add(obj){
-		if(!obj) return;
-
-		//如果已经可以计算文本宽度，则直接进行计算
-		if(this.looped)
-		this.countWidth([obj]);
-
-		this.save.push(obj);
-	}
-
-	//清除
-	clear(){
-		this.save = [];
-	}
-
-	//改变全局样式
-	changeStyle(opts = {}){
-		//文本属性保存
-		this.globalSize = opts.fontSize || this.globalSize || "24px";   //字体大小
-		this.globalFamily = opts.fontFamily || this.globalFamily || "微软雅黑"; //字体
-		this.globalStyle = opts.fontStyle || this.globalStyle || "normal"; //字体样式
-		this.globalWeight = opts.fontWeight || this.globalWeight || "normal"; //字体粗细
-		this.globalColor = opts.fontColor || this.globalColor || "#ffffff"; //字体颜色
-
-		//表示进行过一次全局样式变化
-		this.globalChanged = true;
-	}
-
-	//启用全局样式
-	initStyle(cxt){
-
-		this.globalChanged = false;
-
-		//合并font属性
-		this.font();
-
-		//更新全局样式
-		cxt.font = this.globalFont;
-		cxt.textBaseline = "middle";
-		cxt.fillStyle = this.globalColor;
+		return row || tempRow;
 
 	}
 
@@ -143,22 +222,21 @@ class normalDM{
 		this.looped = true;
 
 		let [ cw , i , item ] = [this.width, 0];
+
 		for( ; item = items[i++]; ){
 			let w = cxt.measureText(item.text).width >> 0;
 			item.width = w;
+			//更新初始 x
 			item.x = cw + 20;
-			if(item.type != "slide")
-			item.x = (cw - w ) / 2;
+			item.speed = 2;
+			if(item.type != "slide"){
+				item.x = (cw - w ) / 2;
+				item.leftTime = this.leftTime;
+				item.speed = 0;
+			}
+			
 		}
-	}
 
-	//合并字体
-	font(){
-		this.globalFont = this.globalStyle + 
-					" normal"+
-					" " + this.globalWeight + 
-					" " + this.globalSize + 
-					" " + this.globalFamily;
 	}
 
 	//更新每个弹幕的单独样式
@@ -169,25 +247,6 @@ class normalDM{
 					" " + item.globalSize + 
 					" " + this.globalFamily;
 		cxt.fillStyle = item.color || this.globalColor;
-	}
-
-	//重置弹幕
-	reset(resetIndex = 0){
-
-		//resetIndex表示想要开始重置的弹幕的下标，系统想重置该值以后的弹幕
-
-		let [items, w, leftTime, i, item] = [this.save, this.width, this.leftTime, resetIndex];
-
-		for( ; item = items[i++]; ){
-			if(item.type == "slide"){
-				item.x = w;
-				item.rowRid = false;
-			} else {
-				item.leftTime = leftTime
-			}
-			item.recovery = false;
-		}
-		this.startIndex = 0;
 	}
 
 	//计算
@@ -203,7 +262,7 @@ class normalDM{
 
 		//更新参数
 		item.leftTime ? item.leftTime -= time : "";
-		item.x -= ( item.speed * time / 16 ) >> 0;
+		item.x -= ( item.speed * this.speedScale * time / 15 ) >> 0;
 		item.y = item.y || row.y;
 		item.row = row;
 	}
@@ -211,7 +270,11 @@ class normalDM{
 	//绘制
 	draw(item,cxt){
 		//如果已经显示完成，则不显示
-		if(item.recovery) return false;
+		if(item.recovery) 
+		return false;
+
+		if(item.hide)
+		return false;
 
 		cxt.save();
 		if( item.change ) {
@@ -235,12 +298,12 @@ class normalDM{
 
 	recoverySlide(item,w){
 
-		let x = item.x;
-		let iw = item.width;
+		//回收slide类型
+		let [x,iw] = [item.x, item.width];
 
-		if( !item.rowRid && x + iw + 20 <= w ){
+		if( !item.rowRid && x + iw < w ){
 			this.rows[item.type].unshift(item.row);
-			item.rowRid = true;
+			item.rowRid = true; //表明该行已被释放
 		}
 
 		if( x > - iw)
@@ -266,28 +329,6 @@ class normalDM{
 			this.startIndex = i;
 			item.row = null;
 		}
-	}
-
-	update(w,h,time){
-
-		let items = this.save;
-		let cxt = this.cxt;
-
-		cxt.clearRect(0,0,w,h);
-
-		this.globalChanged && this.initStyle(cxt); //初始化全局样式
-
-		!this.looped && this.countWidth(items); //计算文本宽度以及初始化位置（只执行一次）
-
-		this.refresh(items); //更新初始下标startIndex
-
-		let [i,item] = [this.startIndex];
-		for(  ; item = items[i++]; ){
-			this.step(item,time);
-			this.draw(item,cxt);
-			this.recovery(item,w);
-		}
-
 	}
 
 }
@@ -320,47 +361,12 @@ class DM {
 		this[loop]();
 	}
 
-	inputData(obj = {}){
-		if( typeof obj != "object" || !obj.type ){
-			return false;
-		}
-		this.normal.add(obj);
-	}
-
 	[init](){
-		this.canvas.style.cssText = "position:absolute;z-index:100;";
-		this.canvas2.style.cssText = "position:absolute;z-index:101;";
+		this.canvas.style.cssText = "position:absolute;z-index:100;top:0px;left:0px;";
+		this.canvas2.style.cssText = "position:absolute;z-index:101;top:0px;left:0px;";
 		this.setSize();
 		this.wrapper.appendChild(this.canvas);
 		this.wrapper.appendChild(this.canvas2);
-	}
-
-	//设置宽高
-	setSize( w = this.width, h = this.height){
-
-		if(!Number.isInteger(w) || w < 0 || !Number.isInteger(h) || h < 0) 
-		return false;
-
-		this.canvas.width = w;
-		this.canvas.height = h;
-		this.canvas2.width = w;
-		this.canvas2.height = h;
-
-		this.normal.getSize();
-	}
-
-	//启用
-	start(){
-		if(this.drawing)
-		return false;
-
-		this.drawing = true;
-		this[loop]();
-	}
-
-	//停止
-	stop(){
-		this.drawing = false;
 	}
 
 	//loop
@@ -377,48 +383,66 @@ class DM {
 		requestAnimationFrame( () => { this[loop](normal,now); } );
 	}
 
+	// API 
+
+	//添加数据
+	inputData(obj = {}){
+		if( typeof obj != "object" || !obj.type ){
+			return false;
+		}
+		this.normal.add(obj);
+	}
+
+	//清除所有弹幕
+	clear(){
+		this.normal.clear();
+	}
+
+	//重置
+	reset(i){
+		this.normal.reset(i);
+	}
+
+	//添加过滤
+	addFilter(key,val){
+		this.normal.addFilter(key,val);
+	}
+
+	//设置宽高
+	setSize( w = this.width, h = this.height){
+
+		if(!Number.isInteger(w) || w < 0 || !Number.isInteger(h) || h < 0) 
+		return false;
+
+		this.canvas.width = w;
+		this.canvas.height = h;
+		this.canvas2.width = w;
+		this.canvas2.height = h;
+
+		this.normal.getSize();
+	}
+
+	//改变全局样式
+	changeStyle(opts = {}){
+		this.normal.changeStyle(opts);
+	}
+
+	//启用
+	start(){
+		if(this.drawing)
+		return false;
+
+		this.drawing = true;
+		this[loop]();
+	}
+
+	//停止
+	stop(){
+		this.drawing = false;
+	}
+
 }
 
-let DMer = new DM(document.querySelector(".wrapper"),{
-	name : "dm1",
-	fontColor : "#66ccff"
-});
-
-DMer.start();
-
-setInterval(function(){
-	let i = Math.random() * 1000 >> 0;
-	DMer.inputData({
-		text : "hello, " + i,
-		type : "top",
-		speed : 0,
-		leftTime : 2000
-	});
-},1000);
-
-setInterval(function(){
-	let i = Math.random() * 1000 >> 0;
-	DMer.inputData({
-		text : "hello, " + i,
-		type : "bottom",
-		speed : 0,
-		leftTime : 2000
-	});
-},700);
-
-let d = new DM(document.querySelector(".wrapper2"),{
-	name : "dm2"
-});
-
-d.start();
-
-setInterval(function(){
-	let i = Math.random() * 200 >> 0;
-	d.inputData({
-		text : "world, " + i,
-		type : "slide",
-		speed : 2
-	});
-},500);
+window.DM = DM;
 
 })(window,Math);

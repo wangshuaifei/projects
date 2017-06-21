@@ -4,10 +4,91 @@
 <meta charset="UTF-8">
 <meta charset="UTF-8" name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
 <title>Document</title>
+<style type="text/css">
+#video{
+	position: relative;
+	max-height: 100%;
+	max-width: 100%;
+	display: block;
+	margin: 0 auto;
+}
+</style>
 </head>
 <body>
-<div class="wrapper" style="max-width:600px;height:300px;background:#6c6;"></div>
-<div class="wrapper2" style="max-width:300px;height:200px;background:#cc0;"></div>
+<div class="wrapper" style="max-width:960px;height:480px;background:#000;position:relative;">
+	<video id="video" src="2.mp4" -webkit-playsinline playsinline></video>
+</div>
+<button onclick="play()">播放</button>
 <script type="text/javascript" src="js/danMuer.js"></script>
+<script type="text/javascript">
+
+var v = document.getElementById("video");
+var dms = [],
+	DMer;
+
+var oplay = "canplay" in v ? "canplay" : "durationchange";
+
+v["on"+oplay] = function(e){
+	var length = v.duration,
+		tArr = ["slide","top","bottom"];
+
+	for( var i = 0; i < 5000; i++ ){
+		var ty = tArr[ i % 3 ];
+		var o = {
+			"text" : "我是弹幕" + i,
+			"type" : ty,
+			"time" : Math.random() * length >> 0
+		};
+		dms.push(o);
+	}
+
+	dms.sort(function(a,b){
+		return a.time - b.time;
+	});
+
+	DMer = new DM(document.querySelector(".wrapper"),{
+		name : "dm1"
+	});
+
+	var linear = DMer.normal.cxt.createLinearGradient(0,0,DMer.width,DMer.height);
+	linear.addColorStop(0,"#66ccff");
+	linear.addColorStop(1,'#ff0000');
+
+	DMer.changeStyle({
+		fontColor : linear
+	});
+
+	//DMer.addFilter("type","top");
+	//DMer.addFilter("type","bottom");
+
+	DMer.start();
+
+};
+
+v.ontimeupdate = function(){
+	var t = v.currentTime >> 0;
+	change(t);
+};
+
+var startIndex = 0;
+
+function change(time){
+	for( ; startIndex < 5000; startIndex++ ){
+		var item = dms[startIndex];
+
+		if( item.time > time )
+		return false;
+
+		if( item.time == time )
+		DMer.inputData(item);
+
+	}
+}
+
+function play(){
+	v.play();
+}
+
+</script>
 </body>
 </html>
