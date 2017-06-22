@@ -30,6 +30,8 @@ class normalDM{
 		this.startIndex = 0;		//循环时的初始下标
 		this.looped = false;		//是否已经经历过一次循环
 
+		this.fps = document.querySelector(".fps");
+
 		this.changeStyle(opts);
 
 	}
@@ -78,7 +80,6 @@ class normalDM{
 	//合并字体
 	font(){
 		this.globalFont = this.globalStyle + 
-					" normal"+
 					" " + this.globalWeight + 
 					" " + this.globalSize + 
 					" " + this.globalFamily;
@@ -115,7 +116,7 @@ class normalDM{
 
 	//循环
 	update(w,h,time){
-
+		this.fps.innerHTML = 1000 / time >> 0;
 		let [items,cxt] = [this.save,this.cxt];
 
 		cxt.clearRect(0,0,w,h);
@@ -206,14 +207,35 @@ class normalDM{
 		const [rows,type] = [this.rows,item.type];
 		const row = ( type != "bottom" ? rows[type].shift() : rows[type].pop() );
 		//生成临时通道
-		const tempRow = {
-			y : 20 + this.unitHeight * ( ( Math.random() * this.rowNum ) << 0 ),
-			speedChange : (type == "slide")
-		};
+		const tempRow = this["getRow_"+type]();
 
 		//返回分配的通道
 		return row || tempRow;
 
+	}
+
+	getRow_bottom(){
+		return {
+			y : 20 + this.unitHeight * ( ( Math.random() * this.rowNum / 2 + this.rowNum / 2 ) << 0 ),
+			speedChange : false,
+			tempItem : true
+		};
+	}
+
+	getRow_slide(){
+		return {
+			y : 20 + this.unitHeight * ( ( Math.random() * this.rowNum ) << 0 ),
+			speedChange : true,
+			tempItem : true
+		};
+	}
+
+	getRow_top(){
+		return {
+			y : 20 + this.unitHeight * ( ( Math.random() * this.rowNum / 2 ) << 0 ),
+			speedChange : false,
+			tempItem : true
+		};
 	}
 
 	//计算宽度
@@ -227,7 +249,7 @@ class normalDM{
 			let w = cxt.measureText(item.text).width >> 0;
 			item.width = w;
 			//更新初始 x
-			item.x = cw + 20;
+			item.x = cw + (Math.random() * 30 >> 0);
 			item.speed = 2;
 			if(item.type != "slide"){
 				item.x = (cw - w ) / 2;
@@ -257,12 +279,14 @@ class normalDM{
 		//如果通道已满，则新弹幕变更速度防止弹幕重叠
 		if(row.speedChange){
 			row.speedChange = false;
-			item.speed += ( Math.random() * 3 + 1 ) >> 0;
+			item.speed += ( Math.random() * 2 + 1 ) >> 0;
 		}
+
+		let speed = ( item.speed * this.speedScale * time / 16 ) >> 0;
 
 		//更新参数
 		item.leftTime ? item.leftTime -= time : "";
-		item.x -= ( item.speed * this.speedScale * time / 15 ) >> 0;
+		item.x -= speed;
 		item.y = item.y || row.y;
 		item.row = row;
 	}
@@ -270,10 +294,7 @@ class normalDM{
 	//绘制
 	draw(item,cxt){
 		//如果已经显示完成，则不显示
-		if(item.recovery) 
-		return false;
-
-		if(item.hide)
+		if(item.recovery || item.hide) 
 		return false;
 
 		cxt.save();
@@ -301,7 +322,7 @@ class normalDM{
 		//回收slide类型
 		let [x,iw] = [item.x, item.width];
 
-		if( !item.rowRid && x + iw < w ){
+		if( !item.rowRid && x + iw < w && !item.row.tempItem){
 			this.rows[item.type].unshift(item.row);
 			item.rowRid = true; //表明该行已被释放
 		}
@@ -316,14 +337,26 @@ class normalDM{
 		if(item.leftTime > 0 )
 		return false;
 
-		this.rows[item.type].unshift(item.row);
+		let type = item.type;
+
+		if(!item.row.tempItem){
+			this.rows[type].unshift(item.row);
+			item.row = null;
+		}
 
 		return true;
 	}
 
 	//更新下标
 	refresh(items){
-		let [i,item] = [this.startIndex];
+		let [i,item,rows] = [this.startIndex,,this.rows];
+		//通道排序
+		for( let key of Object.keys(rows) ){
+			rows[key].sort(function(a,b){
+				return a.y - b.y;
+			});
+		}
+
 		for( ; item = items[i++]; ){
 			if(!item.recovery) return false;
 			this.startIndex = i;

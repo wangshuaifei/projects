@@ -18,6 +18,7 @@
 <div class="wrapper" style="max-width:960px;height:480px;background:#000;position:relative;">
 	<video id="video" src="2.mp4" -webkit-playsinline playsinline></video>
 </div>
+<span class="fps"></span>
 <button onclick="play()">播放</button>
 <script type="text/javascript" src="js/danMuer.js"></script>
 <script type="text/javascript">
@@ -47,16 +48,16 @@ v["on"+oplay] = function(e){
 	});
 
 	DMer = new DM(document.querySelector(".wrapper"),{
-		name : "dm1"
+		name : "dm1",
 	});
 
 	var linear = DMer.normal.cxt.createLinearGradient(0,0,DMer.width,DMer.height);
 	linear.addColorStop(0,"#66ccff");
 	linear.addColorStop(1,'#ff0000');
 
-	DMer.changeStyle({
+	/*DMer.changeStyle({
 		fontColor : linear
-	});
+	});*/
 
 	//DMer.addFilter("type","top");
 	//DMer.addFilter("type","bottom");
