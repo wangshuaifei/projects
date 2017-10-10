@@ -1,113 +1,64 @@
-html,body{
-	margin: 0;
-	padding: 0;
+body{
+	background: #e2e2e2;
 }
 
 .content{
 	position: relative;
-	width: 1200px;
-	margin: 0 auto;
+	height: auto;
+	padding-top: 30px;
 }
 
-.wrapper{
-	position:relative;
-	width:800px;
-	height:450px;
-	background:#000;
+.column{
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+.wrapper,.controls{
+	position: relative;
+	height: auto;
+	background: #fff;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.controls{
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.first-h3{
+	margin-top: 0px;
 }
 
 #video{
 	position: relative;
-	max-height: 100%;
-	max-width: 100%;
+	height: auto;
 	display: block;
 	margin: 0 auto;
 }
 
-.setting-box{
-	position: absolute;
-	right: 0px;
-	width: 400px;
+.scroll-wrapper{
+	position: relative;
+	max-height: 360px;
 	height: auto;
-	top: 0px;
-	z-index: 2000;
+	overflow: hidden;
 }
 
-.setting-list{
+.scroll{
 	position: relative;
 	height: auto;
-	padding: 10px 0px;
-	padding-left: 22px;
+	min-height: 400px;
 }
 
-div[data-status="hide"]{
-	display: none;
+.input-group{
+	margin-bottom: 20px;
 }
 
-.setting-header{
-	background: #00CFE6;
-	color: #fff;
+.btn-group{
+	margin-right: 20px;
 }
 
-select{
-	position: relative;
-	height: 30px;
-	width: 160px;
-	outline: none;
-	margin-left: 20px;
-}
-
-.setting-content{
-	position: relative;
-	height: auto;
-}
-
-.setting-item{
-	position: relative;
-	height: auto;
-	padding: 8px 0px;
-}
-
-input{
-	height: 26px;
-	text-indent: 10px;
-}
-
-.effect-list{
-	position: relative;
-	height: auto;
-}
-
-.effect-content{
-	position: relative;
-	margin-top: 10px;
-}
-
-.effect-item{
-	position: relative;
-	margin-bottom: 6px;
-}
-
-.inline-input{
-	width: 55px;
-	text-indent: 4px;
-}
-
-button{
-	width: 100px;
-	height: 40px;
-	border: none;
-	outline: none;
-	background: #00CFE6;
-	color: #fff;
-	margin-bottom: 10px;
-}
-
-button:hover{
-	cursor: pointer;
-	opacity: 0.9;
-}
-
-#useGradient{
-	height: auto;
+.nm-sub-btn{
+	margin-top: 20px;
 }
