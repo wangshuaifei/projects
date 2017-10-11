@@ -19,55 +19,69 @@
 			<div class="column col-md-4 col-xs-12">
 				<div class="controls">
 					<h3 class="first-h3">控制项:</h3>
-					<ul class="nav nav-pills">
-					  <li role="presentation" class="active"><a href="#">普通弹幕</a></li>
-					  <li role="presentation"><a href="#">高级弹幕</a></li>
-					  <li role="presentation"><a href="#">过滤</a></li>
-					  <li role="presentation"><a href="#">全局样式</a></li>
-					  <li role="presentation"><a href="#">其他控制</a></li>
+					<ul class="nav nav-pills control-settings">
+					  <li role="presentation" class="active"><a href="#" data-set="normal">普通弹幕</a></li>
+					  <li role="presentation"><a href="#" data-set="effect">高级弹幕</a></li>
+					  <li role="presentation"><a href="#" data-set="filter">过滤</a></li>
+					  <li role="presentation"><a href="#" data-set="style">全局样式</a></li>
+					  <li role="presentation"><a href="#" data-set="control">其他控制</a></li>
 					</ul>
 					<h3>具体参数:</h3>
 					<div class="scroll-wrapper">
 						<div class="scroll">
-							<div class="panel panel-primary">
+							<div class="panel panel-primary" data-setting="normal">
 								<div class="panel-heading">普通弹幕控制参数：</div>
 							  　<div class="panel-body">
 							   　　 <div class="input-group">
 								      <span class="input-group-addon">添加</span>
-									  <input type="tel" class="form-control" aria-label="" placeholder="2000" maxlength="6">
+									  <input type="tel" class="form-control" aria-label="" placeholder="2000" maxlength="6" id="normal-danmu-num">
 									  <span class="input-group-addon">条弹幕</span>
 								    </div>
 								    <div class="input-group">
 								      <span class="input-group-addon">弹幕内容:</span>
-									  <input type="text" class="form-control" aria-label="" placeholder="我是一条弹幕">
+									  <input type="text" class="form-control" aria-label="" placeholder="我是一条弹幕" id="normal-danmu-text">
 								    </div>
-								    <div class="btn-group">
+								    <div class="btn-group" id="normal-danmu-direc" data-val="rtol">
 									  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									    弹幕方向 <span class="caret"></span>
 									  </button>
 									  <ul class="dropdown-menu">
-									    <li><a href="#">从右往左</a></li>
-									    <li><a href="#">从左往右</a></li>
+									    <li><a href="#" data-val="rtol">从右往左</a></li>
+									    <li><a href="#" data-val="ltor">从左往右</a></li>
 									  </ul>
 									</div>
-									<div class="btn-group">
+									<div class="btn-group" id="normal-danmu-timing" data-val="linear">
 									  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									    时间曲线 <span class="caret"></span>
 									  </button>
 									  <ul class="dropdown-menu">
-									    <li><a href="#">匀速</a></li>
-									    <li><a href="#">缓入</a></li>
-									    <li><a href="#">缓出</a></li>
-									    <li><a href="#">缓入缓出</a></li>
+									    <li><a href="#" data-val="linear">匀速</a></li>
+									    <li><a href="#" data-val="easeIn">缓入</a></li>
+									    <li><a href="#" data-val="easeOut">缓出</a></li>
+									    <li><a href="#" data-val="easeInOut">缓入缓出</a></li>
 									  </ul>
 									</div>
-									<button type="button" class="btn btn-primary btn-block nm-sub-btn">确定</button>
+									<button type="button" class="btn btn-primary btn-block" id="normal-submit-btn">确定</button>
 								</div>
 							</div>
-							<div class="panel panel-primary">
+							<div class="panel panel-primary" data-setting="effect">
 								<div class="panel-heading">高级弹幕控制参数：</div>
 							  　<div class="panel-body">
-							   　　 
+							   　　 <div class="btn-row">
+									   	<div class="btn-group">
+										  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										    弹幕类型 <span class="caret"></span>
+										  </button>
+										  <ul class="dropdown-menu">
+										    <li><a href="#" data-val="text">文本类型</a></li>
+										    <li><a href="#" data-val="rect">矩形类型</a></li>
+										    <li><a href="#" data-val="circle">圆形类型</a></li>
+										    <li><a href="#" data-val="polygon">多边形类型</a></li>
+										    <li><a href="#" data-val="image">图片类型</a></li>
+										  </ul>
+										</div>
+								   </div>
+								   <div class=""></div>
 								</div>
 							</div>
 						</div>
