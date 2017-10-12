@@ -62,3 +62,15 @@ body{
 #normal-submit-btn{
 	margin-top: 20px;
 }
+
+.btn-row{
+	position: relative;
+	height: auto;
+	margin-bottom: 20px;
+}
+
+.check-row{
+	position: relative;
+	height: auto;
+	margin-bottom: 20px !important;
+}

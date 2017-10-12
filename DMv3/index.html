@@ -15,6 +15,7 @@
 				<div class="wrapper">
 					<video id="video" src="2.mp4" -webkit-playsinline playsinline></video>
 				</div>
+				<div class="showMsg"></div>
 			</div>
 			<div class="column col-md-4 col-xs-12">
 				<div class="controls">
@@ -31,8 +32,8 @@
 						<div class="scroll">
 							<div class="panel panel-primary" data-setting="normal">
 								<div class="panel-heading">普通弹幕控制参数：</div>
-							  　<div class="panel-body">
-							   　　 <div class="input-group">
+								<div class="panel-body">
+									<div class="input-group">
 								      <span class="input-group-addon">添加</span>
 									  <input type="tel" class="form-control" aria-label="" placeholder="2000" maxlength="6" id="normal-danmu-num">
 									  <span class="input-group-addon">条弹幕</span>
@@ -66,8 +67,8 @@
 							</div>
 							<div class="panel panel-primary" data-setting="effect">
 								<div class="panel-heading">高级弹幕控制参数：</div>
-							  　<div class="panel-body">
-							   　　 <div class="btn-row">
+								<div class="panel-body">
+									<div class="btn-row">
 									   	<div class="btn-group">
 										  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										    弹幕类型 <span class="caret"></span>
@@ -82,6 +83,150 @@
 										</div>
 								   </div>
 								   <div class=""></div>
+								</div>
+							</div>
+							<div class="panel panel-primary" data-setting="filter">
+								<div class="panel-heading">过滤：</div>
+								<div class="panel-body">
+									<div class="input-group">
+										<span class="input-group-addon">添加过滤：</span>
+										<span class="input-group-addon">关键字</span>
+										<input type="text" class="form-control" aria-label="" placeholder="type" id="filter-danmu-add-key">
+										<span class="input-group-addon">值</span>
+										<input type="text" class="form-control" aria-label="" placeholder="slide" id="filter-danmu-add-val">
+									</div>
+									<div class="btn-row">
+										<button type="button" class="btn btn-primary btn-block" id="filter-add-btn">添加</button>
+									</div>
+									<div class="input-group">
+										<span class="input-group-addon">删除过滤：</span>
+										<span class="input-group-addon">关键字</span>
+										<input type="text" class="form-control" aria-label="" placeholder="type" id="filter-danmu-remove-key">
+										<span class="input-group-addon">值</span>
+										<input type="text" class="form-control" aria-label="" placeholder="slide" id="filter-danmu-remove-val">
+									</div>
+									<div class="btn-row">
+										<button type="button" class="btn btn-primary btn-block" id="filter-remove-btn">删除</button>
+									</div>
+								</div>
+							</div>
+							<div class="panel panel-primary" data-setting="style">
+								<div class="panel-heading">全局样式控制</div>
+								<div class="panel-body">
+									<div class="input-group">
+								      <span class="input-group-addon">字体大小：</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="24" maxlength="3" id="normal-danmu-size">
+									  <span class="input-group-addon">px</span>
+								    </div>
+								    <div class="btn-row">
+								    	<div class="btn-group" id="normal-danmu-fontStyle" data-val="normal">
+										  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										    文本样式 <span class="caret"></span>
+										  </button>
+										  <ul class="dropdown-menu">
+										    <li><a href="#" data-val="italic">斜体</a></li>
+										    <li><a href="#" data-val="normal">普通</a></li>
+										  </ul>
+										</div>
+										<div class="btn-group" id="normal-danmu-fontWeight" data-val="normal">
+										  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										    文本粗细 <span class="caret"></span>
+										  </button>
+										  <ul class="dropdown-menu">
+										    <li><a href="#" data-val="normal">普通</a></li>
+										    <li><a href="#" data-val="bolder">粗体</a></li>
+										    <li><a href="#" data-val="lighter">细体</a></li>
+										  </ul>
+										</div>
+								    </div>
+									<div class="input-group">
+								      <span class="input-group-addon">文本颜色：</span>
+									  <input type="text" class="form-control" aria-label="" placeholder="#FFFFFF" id="normal-danmu-color">
+								    </div>
+								    <div class="input-group">
+								      <span class="input-group-addon">透明度：</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="100" maxlength="3" id="normal-danmu-opacity">
+								    </div>
+								    <div class="btn-row">
+								    	<div class="btn-group" id="normal-danmu-family" data-val="Microsoft JhengHei">
+										  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										    文本字体： <span class="caret"></span>
+										  </button>
+										  <ul class="dropdown-menu">
+										    <li><a href="#" data-val="Microsoft Yahei">微软雅黑</a></li>
+										    <li><a href="#" data-val="SimHei">黑体</a></li>
+										    <li><a href="#" data-val="SimSun">宋体</a></li>
+										    <li><a href="#" data-val="Microsoft JhengHei">微软正黑体</a></li>
+										  </ul>
+										</div>
+								    </div>
+								    <div class="checkbox">
+								      	<label class="check-row">
+								       	 <input type="checkbox" id="use-gradient"> 我想使用渐变效果
+								      	</label>
+								      	<div class="btn-row">
+									    	<div class="btn-group" id="normal-danmu-gradient-type" data-val="linear">
+											  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											    渐变类型： <span class="caret"></span>
+											  </button>
+											  <ul class="dropdown-menu">
+											    <li><a href="#" data-val="linear">线性渐变</a></li>
+											    <li><a href="#" data-val="radial">径向渐变</a></li>
+											  </ul>
+											</div>
+									    </div>
+									    <div class="input-group">
+									      <span class="input-group-addon">起始坐标：</span>
+									      <span class="input-group-addon">X</span>
+										  <input type="tel" class="form-control" aria-label="" placeholder="0" id="normal-danmu-gradient-startX">
+									      <span class="input-group-addon">Y</span>
+										  <input type="tel" class="form-control" aria-label="" placeholder="0" id="normal-danmu-gradient-startY">
+									    </div>
+									    <div class="input-group">
+									      <span class="input-group-addon">终点坐标：</span>
+									      <span class="input-group-addon">X</span>
+										  <input type="tel" class="form-control" aria-label="" placeholder="0" id="normal-danmu-gradient-endX">
+									      <span class="input-group-addon">Y</span>
+										  <input type="tel" class="form-control" aria-label="" placeholder="0" id="normal-danmu-gradient-endY">
+									    </div>
+									    <div class="input-group">
+									      <span class="input-group-addon">起始颜色：</span>
+										  <input type="tel" class="form-control" aria-label="" placeholder="#ffffff" id="normal-danmu-gradient-startColor">
+									      <span class="input-group-addon">终点颜色</span>
+										  <input type="tel" class="form-control" aria-label="" placeholder="#ffffff" id="normal-danmu-gradient-endColor">
+									    </div>
+								    </div>
+								    <button type="button" class="btn btn-primary btn-block" id="normal-change-btn">确定</button>
+								</div>
+							</div>
+							<div class="panel panel-primary" data-setting="control">
+								<div class="panel-heading">其他控制选项：</div>
+								<div class="panel-body">
+									<div class="btn-row">
+										<button type="button" class="btn btn-primary" id="all-start">启动</button>
+										<button type="button" class="btn btn-primary" id="all-stop">停止</button>
+										<button type="button" class="btn btn-primary" id="all-play">运行</button>
+										<button type="button" class="btn btn-primary" id="all-pause">暂停</button>
+									</div>
+									<div class="btn-row">
+										<button type="button" class="btn btn-primary" id="all-clear">清除弹幕</button>
+										<button type="button" class="btn btn-primary" id="all-reset">重置弹幕</button>
+										<button type="button" class="btn btn-primary" id="all-disable">禁用高级弹幕</button>
+									</div>
+									<div class="btn-row">
+										<button type="button" class="btn btn-primary" id="all-enable">起用高级弹幕</button>
+										<button type="button" class="btn btn-primary" id="all-fps">显示FPS</button>
+									</div>
+									<div class="input-group">
+								      <span class="input-group-addon">调整画布尺寸：</span>
+								      <span class="input-group-addon">宽度</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="600" maxlength="4" id="canvas-danmu-width">
+									  <span class="input-group-addon">高度</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="400" maxlength="4" id="canvas-danmu-height">
+								    </div>
+								    <div class="btn-row">
+								    	<button type="button" class="btn btn-primary" id="all-resize">确定调整</button>
+								    </div>
 								</div>
 							</div>
 						</div>
