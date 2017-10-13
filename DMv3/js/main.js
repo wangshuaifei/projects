@@ -114,6 +114,50 @@ video.ondurationchange = function(e){
 
 /***************************************************************************************************/
 
+//高级弹幕设置
+
+$('.inner-select').on("click","a",function(e){
+
+	var $val = $(this).attr("data-val");
+
+	$('.owner-box').removeClass("o-active");
+
+	$('.owner-box[data-val="'+$val+'"]').addClass("o-active");
+
+	iscroll.refresh();
+
+});
+
+
+
+/***************************************************************************************************/
+
+//修改过滤设置
+
+$('#filter-add-btn').on("click",function(e){
+
+	var $key = $("#filter-danmu-add-key").val(),
+		$val = $("#filter-danmu-add-val").val();
+
+	if(!$key || !$val) return false;
+
+	DMer.addFilter($key,$val);
+
+});
+
+$('#filter-remove-btn').on("click",function(e){
+
+	var $key = $("#filter-danmu-remove-key").val(),
+		$val = $("#filter-danmu-remove-val").val();
+
+	if(!$key) return false;
+
+	DMer.removeFilter($key,$val);
+
+});
+
+/***************************************************************************************************/
+
 //修改全局样式
 
 $("#normal-change-btn").on("click",function(e){
@@ -157,6 +201,20 @@ $("#normal-change-btn").on("click",function(e){
 			"color" : graEColor
 		}]
 	});
+
+});
+
+/***************************************************************************************************/
+
+//修改全局样式
+
+$("#filter-add-btn").on("click",function(e){
+
+	var key = $("#filter-danmu-add-key").val();
+
+	if(!key) return false;
+
+	var val = $("#filter-danmu-add-val").val() || "";
 
 });
 

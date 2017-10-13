@@ -73,7 +73,7 @@
 										  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										    弹幕类型 <span class="caret"></span>
 										  </button>
-										  <ul class="dropdown-menu">
+										  <ul class="dropdown-menu inner-select">
 										    <li><a href="#" data-val="text">文本类型</a></li>
 										    <li><a href="#" data-val="rect">矩形类型</a></li>
 										    <li><a href="#" data-val="circle">圆形类型</a></li>
@@ -82,7 +82,162 @@
 										  </ul>
 										</div>
 								   </div>
-								   <div class=""></div>
+								   <div class="owner-box o-active" data-val="text">
+								   		<div class="input-group">
+									      <span class="input-group-addon">文本</span>
+										  <input type="text" class="form-control" aria-label="" placeholder="我是弹幕" maxlength="20" id="effect-danmu-text">
+									    </div>
+									    <div class="input-group">
+									      <span class="input-group-addon">文本大小</span>
+										  <input type="text" class="form-control" aria-label="" placeholder="24" id="effect-danmu-size">
+										  <span class="input-group-addon">px</span>
+									    </div>
+									    <div class="input-group">
+									      <span class="input-group-addon">文本粗细</span>
+										  <input type="text" class="form-control" aria-label="" placeholder="normal / bolder / lighter" id="effect-danmu-weight">
+									    </div>
+									    <div class="input-group">
+									      <span class="input-group-addon">文本样式</span>
+										  <input type="text" class="form-control" aria-label="" placeholder="normal / italic" id="effect-danmu-style">
+									    </div>
+								   </div>
+								   <div class="owner-box" data-val="rect">
+								   		<div class="input-group">
+									      <span class="input-group-addon">宽度</span>
+										  <input type="text" class="form-control" aria-label="" placeholder="0" maxlength="4" id="effect-danmu-rect-width">
+										  <span class="input-group-addon">高度</span>
+										  <input type="text" class="form-control" aria-label="" placeholder="0" maxlength="4" id="effect-danmu-rect-height">
+									    </div>
+								   </div>
+								   <div class="owner-box" data-val="circle">
+								   		<div class="input-group">
+									      <span class="input-group-addon">半径</span>
+										  <input type="text" class="form-control" aria-label="" placeholder="10" maxlength="4" id="effect-danmu-radius">
+									    </div>
+								   </div>
+								   <div class="owner-box" data-val="polygon">
+								   		<div class="input-group">
+									      <span class="input-group-addon">顶点集</span>
+										  <input type="text" class="form-control" aria-label="" placeholder="(1,2),(2,3),(4,5)..." id="effect-danmu-points">
+									    </div>
+									    <div class="input-group">
+									      <span class="input-group-addon">偏移位移</span>
+									      <span class="input-group-addon">X</span>
+										  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-distX">
+										  <span class="input-group-addon">Y</span>
+										  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-distY">
+									    </div>
+								   </div>
+								   <div class="owner-box" data-val="image">
+								   		<div class="form-group">
+											<label for="exampleInputFile">选择图片</label>
+											<input type="file" id="chooseImage">
+											<p class="help-block">请选择一张图片上传</p>
+										</div>
+										<div class="input-group">
+									      <span class="input-group-addon">宽度</span>
+										  <input type="text" class="form-control" aria-label="" placeholder="0" maxlength="4" id="effect-danmu-image-width">
+										  <span class="input-group-addon">高度</span>
+										  <input type="text" class="form-control" aria-label="" placeholder="0" maxlength="4" id="effect-danmu-image-height">
+									    </div>
+								   </div>
+								   <h4>偏移</h4>
+								   <div class="input-group">
+								      <span class="input-group-addon">起始位置</span>
+								      <span class="input-group-addon">X</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-translate-sx">
+									  <span class="input-group-addon">px</span>
+									  <span class="input-group-addon">Y</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-translate-sy">
+									  <span class="input-group-addon">px</span>
+								    </div>
+								    <div class="input-group">
+								      <span class="input-group-addon">终点位置</span>
+								      <span class="input-group-addon">X</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-translate-ex">
+									  <span class="input-group-addon">px</span>
+									  <span class="input-group-addon">Y</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-translate-ey">
+									  <span class="input-group-addon">px</span>
+								    </div>
+								    <div class="input-group">
+								      <span class="input-group-addon">时间曲线</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="linear / easeIn / easeOut / easeInOut" id="effect-danmu-translate-timing">
+									</div>
+									<h4>缩放</h4>
+									<div class="input-group">
+								      <span class="input-group-addon">起始缩放倍数</span>
+								      <span class="input-group-addon">X</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-scale-sx">
+									  <span class="input-group-addon">倍</span>
+									  <span class="input-group-addon">Y</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-scale-sy">
+									  <span class="input-group-addon">倍</span>
+								    </div>
+								    <div class="input-group">
+								      <span class="input-group-addon">终点缩放倍数</span>
+								      <span class="input-group-addon">X</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-scale-ex">
+									  <span class="input-group-addon">倍</span>
+									  <span class="input-group-addon">Y</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-scale-ey">
+									  <span class="input-group-addon">倍</span>
+								    </div>
+								    <div class="input-group">
+								      <span class="input-group-addon">时间曲线</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="linear / easeIn / easeOut / easeInOut" id="effect-danmu-scale-timing">
+									</div>
+									<h4>旋转</h4>
+									<div class="input-group">
+								      <span class="input-group-addon">起始角度</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-rotate-sa">
+									  <span class="input-group-addon">度</span>
+									  <span class="input-group-addon">结束角度</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-rotate-ea">
+									  <span class="input-group-addon">度</span>
+								    </div>
+								    <div class="input-group">
+								      <span class="input-group-addon">时间曲线</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="linear / easeIn / easeOut / easeInOut" id="effect-danmu-rotate-timing">
+									</div>
+									<h4>斜切</h4>
+									<div class="input-group">
+								      <span class="input-group-addon">起始斜切角度</span>
+								      <span class="input-group-addon">X</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-skew-sx">
+									  <span class="input-group-addon">度</span>
+									  <span class="input-group-addon">Y</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-skew-sy">
+									  <span class="input-group-addon">度</span>
+								    </div>
+								    <div class="input-group">
+								      <span class="input-group-addon">结束斜切角度</span>
+								      <span class="input-group-addon">X</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-skew-ex">
+									  <span class="input-group-addon">度</span>
+									  <span class="input-group-addon">Y</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-skew-ey">
+									  <span class="input-group-addon">度</span>
+								    </div>
+								    <div class="input-group">
+								      <span class="input-group-addon">时间曲线</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="linear / easeIn / easeOut / easeInOut" id="effect-danmu-skew-timing">
+									</div>
+									<h4>透明度</h4>
+									<div class="input-group">
+								      <span class="input-group-addon">起始透明度</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="1" id="effect-danmu-opacity-start">
+									  <span class="input-group-addon">结束透明度</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="1" id="effect-danmu-opacity-end">
+								    </div>
+								    <div class="input-group">
+								      <span class="input-group-addon">时间曲线</span>
+									  <input type="tel" class="form-control" aria-label="" placeholder="linear / easeIn / easeOut / easeInOut" id="effect-danmu-opacity-timing">
+									</div>
+									<div class="btn-row">
+										<button type="button" class="btn btn-primary" id="effect-save-btn">保存为动画第 <strong>1</strong> 步</button>
+										<button type="button" class="btn btn-primary" id="effect-submit">生成弹幕</button>
+									</div>
 								</div>
 							</div>
 							<div class="panel panel-primary" data-setting="filter">

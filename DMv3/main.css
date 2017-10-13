@@ -74,3 +74,12 @@ body{
 	height: auto;
 	margin-bottom: 20px !important;
 }
+
+.owner-box{
+	position: relative;
+	display: none;
+}
+
+.o-active{
+	display: block;
+}
