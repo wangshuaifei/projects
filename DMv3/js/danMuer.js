@@ -695,8 +695,8 @@ class effectDM{
 		//圆形
 		step.radius = step.radius || 10;
 		//判断多边形
-		translate.distX = step.points ? ( step.distX || 0 ) : translate.distX;
-		translate.distY = step.points ? ( step.distY || 0 ) : translate.distY;
+		translate.distX = ( step.points && step.points.length > 0 ) ? ( step.distX || 0 ) : translate.distX;
+		translate.distY = ( step.points && step.points.length > 0 ) ? ( step.distY || 0 ) : translate.distY;
 	}
 
 	//更新canvas尺寸

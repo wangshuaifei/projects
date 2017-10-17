@@ -104,15 +104,15 @@
 								   <div class="owner-box" data-val="rect">
 								   		<div class="input-group">
 									      <span class="input-group-addon">宽度</span>
-										  <input type="text" class="form-control" aria-label="" placeholder="0" maxlength="4" id="effect-danmu-rect-width">
+										  <input type="tel" class="form-control" aria-label="" placeholder="100" maxlength="4" id="effect-danmu-rect-width">
 										  <span class="input-group-addon">高度</span>
-										  <input type="text" class="form-control" aria-label="" placeholder="0" maxlength="4" id="effect-danmu-rect-height">
+										  <input type="tel" class="form-control" aria-label="" placeholder="100" maxlength="4" id="effect-danmu-rect-height">
 									    </div>
 								   </div>
 								   <div class="owner-box" data-val="circle">
 								   		<div class="input-group">
 									      <span class="input-group-addon">半径</span>
-										  <input type="text" class="form-control" aria-label="" placeholder="10" maxlength="4" id="effect-danmu-radius">
+										  <input type="tel" class="form-control" aria-label="" placeholder="10" maxlength="4" id="effect-danmu-radius">
 									    </div>
 								   </div>
 								   <div class="owner-box" data-val="polygon">
@@ -131,7 +131,7 @@
 								   <div class="owner-box" data-val="image">
 								   		<div class="form-group">
 											<label for="exampleInputFile">选择图片</label>
-											<input type="file" id="chooseImage">
+											<input type="file" id="chooseImage" accept="image/png,image/gif,image/jpeg">
 											<p class="help-block">请选择一张图片上传</p>
 										</div>
 										<div class="input-group">
@@ -168,19 +168,19 @@
 									<div class="input-group">
 								      <span class="input-group-addon">起始缩放倍数</span>
 								      <span class="input-group-addon">X</span>
-									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-scale-sx">
+									  <input type="tel" class="form-control" aria-label="" placeholder="1" id="effect-danmu-scale-sx">
 									  <span class="input-group-addon">倍</span>
 									  <span class="input-group-addon">Y</span>
-									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-scale-sy">
+									  <input type="tel" class="form-control" aria-label="" placeholder="1" id="effect-danmu-scale-sy">
 									  <span class="input-group-addon">倍</span>
 								    </div>
 								    <div class="input-group">
 								      <span class="input-group-addon">终点缩放倍数</span>
 								      <span class="input-group-addon">X</span>
-									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-scale-ex">
+									  <input type="tel" class="form-control" aria-label="" placeholder="1" id="effect-danmu-scale-ex">
 									  <span class="input-group-addon">倍</span>
 									  <span class="input-group-addon">Y</span>
-									  <input type="tel" class="form-control" aria-label="" placeholder="0" id="effect-danmu-scale-ey">
+									  <input type="tel" class="form-control" aria-label="" placeholder="1" id="effect-danmu-scale-ey">
 									  <span class="input-group-addon">倍</span>
 								    </div>
 								    <div class="input-group">
@@ -234,6 +234,22 @@
 								      <span class="input-group-addon">时间曲线</span>
 									  <input type="tel" class="form-control" aria-label="" placeholder="linear / easeIn / easeOut / easeInOut" id="effect-danmu-opacity-timing">
 									</div>
+									<h4>其他</h4>
+									<div class="input-group">
+								      	<span class="input-group-addon">生存时间</span>
+									  	<input type="tel" class="form-control" aria-label="" placeholder="3000" id="effect-danmu-duration">
+									  	<span class="input-group-addon">ms</span>
+								    </div>
+								    <div class="input-group">
+								    	<span class="input-group-addon">Tween曲线类型</span>
+									  	<input type="text" class="form-control" aria-label="" placeholder="quad / cubic / quart / quint" id="effect-danmu-type">
+								    </div>
+								    <div class="input-group">
+								      	<span class="input-group-addon">填充颜色</span>
+									  	<input type="text" class="form-control" aria-label="" placeholder="#66ccff" id="effect-danmu-fill">
+									 	<span class="input-group-addon">描边颜色</span>
+									  	<input type="text" class="form-control" aria-label="" placeholder="#ffffff" id="effect-danmu-stroke">
+								    </div>
 									<div class="btn-row">
 										<button type="button" class="btn btn-primary" id="effect-save-btn">保存为动画第 <strong>1</strong> 步</button>
 										<button type="button" class="btn btn-primary" id="effect-submit">生成弹幕</button>
