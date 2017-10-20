@@ -22,6 +22,14 @@ body{
 	padding-bottom: 20px;
 }
 
+.display-row{
+	position: relative;
+	height: auto;
+	max-width: 800px;
+	width: 100%;
+	margin: 0 auto;
+}
+
 .controls{
 	padding-left: 20px;
 	padding-right: 20px;
@@ -36,6 +44,7 @@ body{
 	height: auto;
 	display: block;
 	margin: 0 auto;
+	max-width: 100%;
 }
 
 .scroll-wrapper{

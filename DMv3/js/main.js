@@ -407,6 +407,8 @@ $("#all-start").on("click",function(e){
 
 	DMer.start();
 
+	video.play();
+
 });
 //停止
 $("#all-stop").on("click",function(e){
@@ -419,11 +421,15 @@ $("#all-play").on("click",function(e){
 
 	DMer.run();
 
+	video.play();
+
 });
 //暂停
 $("#all-pause").on("click",function(e){
 
 	DMer.pause();
+
+	video.pause();
 
 });
 //清除

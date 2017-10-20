@@ -1,7 +1,7 @@
 /*
 * DanMuer v 3.2.5
 * author 孤月
-* date 2017/10/10
+* date 2017/10/18
 */
 
 (function(window,Math,undefined){
