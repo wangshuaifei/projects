@@ -2,8 +2,9 @@ define(function(){
 
 	var iup,
 		box = document.querySelector(".iUP-images-box"),
-		upBtn = document.querySelector(".iUP-btn"),
-		fileEle = document.getElementById("iUP-choose");
+		upBtn = document.querySelector("#iUP-upload"),
+		fileEle = document.getElementById("iUP-choose"),
+		timer;
 
 	function init(){
 
@@ -33,14 +34,22 @@ define(function(){
 				id = item.querySelector(".iUP-image").getAttribute("data-id");
 
 			iup.delete(id);
-			
-			item.classList.push("iUP-hide");
+
+			item.classList.add("iUP-hide");
 
 		};
 
+
+
 		upBtn.onclick = function(e){
 
+			if(iup.getFileNum() <= 0) return false;
 
+			iup.upload("php/upload.php","dataUrl",function(data){
+				console.log(data);
+			});
+
+			showProgress();
 
 		};
 
@@ -61,6 +70,20 @@ define(function(){
 				box.innerHTML += tpl;
 			});
 		}
+
+	}
+
+	function showProgress(){
+
+		timer = setTimeout(showProgress,100);
+
+		var progress = iup.getProgress();
+
+		if( !progress) return false;
+
+		if( progress.loaded == progress.total ) clearTimeout(timer);
+
+		console.log( progress.loaded / progress.total );
 
 	}
 

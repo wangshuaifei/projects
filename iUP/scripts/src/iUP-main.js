@@ -74,6 +74,55 @@ define(function(require){
 				}
 			}
 
+		},
+
+		upload : function(src,type,callback){
+			callback = callback || function(){};
+
+			var fd = new FormData(),
+				xhr = new XMLHttpRequest(),
+				_self = this;
+
+			if(!src) return false;
+
+			if( type == "upfile" ){
+				for( var i = 0, fileObj; fileObj = this.files[i++]; ){
+					fd.append("file_"+i,fileObj.file);
+				}
+				fd.append("type","file");
+			} else {
+				for( var i = 0, fileObj; fileObj = this.files[i++]; ){
+					fd.append("imgBase64Src_"+i,fileObj.dataUrl);
+				}
+				fd.append("type","dataUrl");
+			}
+				
+
+			xhr.onload = function(e){
+				callback(e);
+			};
+
+			xhr.onerror = function(e){
+				callback(e);
+			};
+
+			xhr.upload.onprogress = function(e){
+				var obj = {
+					total : e.total,
+					loaded : e.loaded
+				};
+
+				_self.progress = obj;
+			};
+
+			xhr.open("post",src);
+
+			xhr.send(fd);
+
+		},
+
+		getProgress : function(){
+			return this.progress;
 		}
 		
 	};
@@ -86,7 +135,9 @@ define(function(require){
 		input : proxy("input"),
 		clear : proxy("clear"),
 		delete : proxy("delete"),
-		getFileNum : proxy("getFileNum")
+		getFileNum : proxy("getFileNum"),
+		upload : proxy("upload"),
+		getProgress : proxy("getProgress")
 	};
 
 });
