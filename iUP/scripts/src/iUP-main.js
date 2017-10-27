@@ -76,14 +76,18 @@ define(function(require){
 
 		},
 
-		upload : function(src,type,callback){
-			callback = callback || function(){};
+		upload : function(options){
+			
+			var url = options.url || "",
+				type = options.type || "file",
+				success = options.success || function(){},
+				fail = options.fail || function(){};
 
 			var fd = new FormData(),
 				xhr = new XMLHttpRequest(),
 				_self = this;
 
-			if(!src) return false;
+			if(!url) return false;
 
 			if( type == "upfile" ){
 				for( var i = 0, fileObj; fileObj = this.files[i++]; ){
@@ -99,11 +103,11 @@ define(function(require){
 				
 
 			xhr.onload = function(e){
-				callback(e);
+				success(e);
 			};
 
 			xhr.onerror = function(e){
-				callback(e);
+				fail(e);
 			};
 
 			xhr.upload.onprogress = function(e){
@@ -115,7 +119,7 @@ define(function(require){
 				_self.progress = obj;
 			};
 
-			xhr.open("post",src);
+			xhr.open("post",url);
 
 			xhr.send(fd);
 

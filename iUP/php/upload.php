@@ -24,9 +24,7 @@ if( $type == "file" ){
 } else {
 	while( $file = $_POST[$pre."_".$i] ){
 		echo $file;
-		return false;
 	}
-	echo "end";
 }
 
 ?>

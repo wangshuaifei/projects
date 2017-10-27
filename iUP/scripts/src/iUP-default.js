@@ -40,13 +40,28 @@ define(function(){
 		};
 
 
-
 		upBtn.onclick = function(e){
 
 			if(iup.getFileNum() <= 0) return false;
 
-			iup.upload("php/upload.php","dataUrl",function(data){
-				console.log(data);
+			var layers = document.querySelectorAll(".iUP-layer");
+
+			for( var i = 0, layer; layer = layers[i++]; ){
+				layer.classList.remove("iUP-layer");
+			}
+
+			iup.upload({
+				url : "php/upload.php",
+				type : "upfile",
+				success : function(data){
+					for( var i = 0, layer; layer = layers[i++]; ){
+						layer.classList.add("iUP-layer");
+					}
+					console.log(data);
+				},
+				fail : function(status){
+					console.log(status);
+				}
 			});
 
 			showProgress();
