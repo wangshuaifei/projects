@@ -1,3 +1,4 @@
+//主函数
 define(function(require){
 
 	var fns = {
