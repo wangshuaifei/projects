@@ -1,4 +1,3 @@
-//主函数
 define(function(require){
 
 	var fns = {
@@ -95,11 +94,13 @@ define(function(require){
 					fd.append("file_"+i,fileObj.file);
 				}
 				fd.append("type","file");
+				fd.append("fileName","file");
 			} else {
 				for( var i = 0, fileObj; fileObj = this.files[i++]; ){
 					fd.append("imgBase64Src_"+i,fileObj.dataUrl);
 				}
 				fd.append("type","dataUrl");
+				fd.append("fileName","imgBase64Src");
 			}
 				
 
