@@ -4,9 +4,9 @@ $i = 0;
 
 $type = $_POST["type"];
 
-$path = dirname(__FILE__);
+$pre = $_POST["fileName"];
 
-$pre = ($type == "file" ? "file" : "imgBase64Src");
+$path = dirname(__FILE__);
 
 $i = 1;
 
