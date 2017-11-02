@@ -1,11 +1,7 @@
 <?php
 
-$i = 0;
-
 $type = $_POST["type"];
-
 $pre = $_POST["fileName"];
-
 $path = dirname(__FILE__);
 
 $i = 1;
