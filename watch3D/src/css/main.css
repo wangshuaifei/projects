@@ -1,0 +1,95 @@
+.wrapper{
+    position: relative;
+    width: 600px;
+    height: 500px;
+    margin: 0 auto;
+    overflow: hidden;
+    max-height: 100%;
+}
+
+.watch3D{
+    position: relative;
+    height: 100%;
+}
+
+.watch3D-container{
+    position: relative;
+    height: 100%;
+    perspective:1000px;
+    transform-style: preserve-3d;
+}
+
+.watch3D-wrapper{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    animation: loop 10s infinite linear;
+}
+
+.watch3D-lists{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 50%;
+    top: 50%;
+    transform-style: preserve-3d;
+    transform: translate(-50%,-50%);
+}
+
+.watch3D-list{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform-origin: 50% 50% 0px;
+}
+
+.list1{
+    transform: rotateY(45deg) translateZ(603.55px);
+}
+
+.list2{
+    transform: rotateY(90deg) translateZ(603.55px);
+}
+
+.list3{
+    transform: rotateY(135deg) translateZ(603.55px);
+}
+
+.list4{
+    transform: rotateY(180deg) translateZ(603.55px);
+}
+
+.list5{
+    transform: rotateY(225deg) translateZ(603.55px);
+}
+
+.list6{
+    transform: rotateY(270deg) translateZ(603.55px);
+}
+
+.list7{
+    transform: rotateY(315deg) translateZ(603.55px);
+}
+
+.list8{
+    transform: rotateY(360deg) translateZ(603.55px);
+}
+
+.watch3D-list img{
+    display: block;
+    width: 100%;
+}
+
+@keyframes loop{
+    0%{
+        transform:  translateZ(300px) rotateY(0deg);
+    }
+
+    100%{
+        transform:  translateZ(300px) rotateY(360deg);
+    }
+}
