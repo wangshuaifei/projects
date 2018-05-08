@@ -1,10 +1,13 @@
+html,body{
+    height: 100%;
+}
+
 .wrapper{
     position: relative;
-    width: 600px;
-    height: 500px;
-    margin: 0 auto;
-    overflow: hidden;
+    height: 100%;
     max-height: 100%;
+    margin : 0 auto;
+    overflow: hidden;
 }
 
 .watch3D{
@@ -15,16 +18,27 @@
 .watch3D-container{
     position: relative;
     height: 100%;
-    perspective:1000px;
+    perspective:500px;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
+}
+
+.watch3D-bg{
+    position: absolute;
+    -webkit-transform: translateX(-50%) translateY(-50%) translateZ(-1500px);
+    transform: translateX(-50%) translateY(-50%) translateZ(-1500px);
+    width: 10000px;
+    height: 10000px;
+    left: 50%;
+    top: 50%;
 }
 
 .watch3D-wrapper{
     position: absolute;
     width: 100%;
     height: 100%;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
-    animation: loop 10s infinite linear;
 }
 
 .watch3D-lists{
@@ -33,7 +47,9 @@
     height: 100%;
     left: 50%;
     top: 50%;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
+    -webkit-transform: translate(-50%,-50%);
     transform: translate(-50%,-50%);
 }
 
@@ -41,55 +57,8 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 100%;
-    height: 100%;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
+    -webkit-transform-origin: 50% 50% 0px;
     transform-origin: 50% 50% 0px;
-}
-
-.list1{
-    transform: rotateY(45deg) translateZ(603.55px);
-}
-
-.list2{
-    transform: rotateY(90deg) translateZ(603.55px);
-}
-
-.list3{
-    transform: rotateY(135deg) translateZ(603.55px);
-}
-
-.list4{
-    transform: rotateY(180deg) translateZ(603.55px);
-}
-
-.list5{
-    transform: rotateY(225deg) translateZ(603.55px);
-}
-
-.list6{
-    transform: rotateY(270deg) translateZ(603.55px);
-}
-
-.list7{
-    transform: rotateY(315deg) translateZ(603.55px);
-}
-
-.list8{
-    transform: rotateY(360deg) translateZ(603.55px);
-}
-
-.watch3D-list img{
-    display: block;
-    width: 100%;
-}
-
-@keyframes loop{
-    0%{
-        transform:  translateZ(300px) rotateY(0deg);
-    }
-
-    100%{
-        transform:  translateZ(300px) rotateY(360deg);
-    }
 }
