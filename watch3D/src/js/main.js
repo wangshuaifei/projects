@@ -8,7 +8,7 @@ class watch3D {
 
         this.box = opts.wrapper || "body";
 
-        this.num = Math.min(opts.num || 0,4) || 18;
+        this.num = opts.num >= 4 ? opts.num : 18;
 
         this.resource = opts.resource || "";
 
@@ -18,7 +18,7 @@ class watch3D {
 
         this.tips = opts.tips || {}; //放置tips
 
-        this.maxY = opts.maxY || 5;
+        this.maxY = opts.maxY || 15;
 
         this.unit = this.width / this.num;
 
@@ -42,18 +42,35 @@ class watch3D {
         return Object.prototype.toString.call(target) === '[object String]' ? "string" : "element";
     }
     //生成单元列表
-    _createList(i,src){
+    _createList(i,src,id){
+
         let list = document.createElement("div");
-        list.className += "watch3D-list list-"+(i+1);
+        list.className += "watch3D-list list-"+(id+1);
         list.style.backgroundImage = "url("+src+")";
         list.style.backgroundRepeat = "no-repeat";
         list.style.backgroundPosition = -this.unit * i +"px 0px";
+        list.style.backgroundSize = "cover";
         list.style.height = this.height + "px";
         list.style.width = this.unit+"px";
-        list.style.webkitTransform = "rotateY("+(i*360/this.num)+"deg) rotateZ(0deg) translateZ("+this.translateZ+"px)";
-        list.style.transform = "rotateY("+(i*360/this.num)+"deg) rotateZ(0deg) translateZ("+this.translateZ+"px)";
+        list.style.webkitTransform = "translate(-50%,-50%) rotateY("+(id*360/this.num)+"deg) rotateZ(0deg) translateZ("+this.translateZ+"px)";
+        list.style.transform = "translate(-50%,-50%) rotateY("+(id*360/this.num)+"deg) rotateZ(0deg) translateZ("+this.translateZ+"px)";
 
         return list;
+    }
+    //生成tip
+    _createTip(id,data){
+        
+        let tip = this.tips[id];
+
+        let tpl = '<div class="tip" style="">\
+                        <div class="tip-point">\
+                        </div>\
+                        <div class="tpl-content">\
+                        </div>\
+                    </div>';
+
+        return tpl;
+
     }
     //初始化组件
     init(){
@@ -68,35 +85,97 @@ class watch3D {
     //加载资源
     loadResources(){
 
-        if( typeof this.resource === "string" && !!this.resource )
+        if( !this.resource ) return false;
+
+        if( typeof this.resource === "string" )
         this._loadSingle();
+        else
+        this._loadMulti();
 
     }
+    //加载单张图片
     _loadSingle(){
         let img = new Image();
         let _self = this;
+        let fg = document.createDocumentFragment();
+
         img.onload = function(){
-            let fg = document.createDocumentFragment();
 
             for( let i = 0; i < _self.num; i++ ){
-                let list = _self._createList(i,_self.resource);
+                let list = _self._createList(i,_self.resource,i);
                 fg.appendChild(list);
             }
-            _self.lists.appendChild(fg);
-            _self.lists.style.height = this.height+"px";
+
+            _self._loading( { loaded : 1, total : 1 } );
+            _self._loadend( {
+                fg,
+                success : { num : 1, list : [_self.resource] },
+                fail : { nnum : 0, list : [] }
+            } );
         };
         img.onerror = function(){
-            _self.error("图片加载失败");
+            _self._loading( { loaded : 1, total : 1 } );
+            _self._loadend( {
+                fg,
+                success : { num : 0, list : [] },
+                fail : { nnum : 1, list : [_self.resource] }
+            } );
         };
         img.src = this.resource;
+    }
+    //加载图片数组
+    _loadMulti(){
+        let _self = this;
+        let len = _self.resource.length;
+        let loaded = {
+            num : 0,
+            list : []
+        };
+        let failed = {
+            num : 0,
+            list : []
+        };
+        let fg = document.createDocumentFragment();
+
+        for( let i = 0,item; item = this.resource[i++]; ){
+            (function(i,item){
+                let img = new Image();
+                img.onload = function () {
+                    loaded.num++;
+                    loadCheck();
+                };
+                img.onerror = function () {
+                    failed.num++;
+                    loadCheck();
+                };
+
+                function loadCheck(){
+                    _self._loading( { loaded: loaded.num + failed.num, total : len } );
+
+                    let list = _self._createList( 0, item, i - 1 );
+
+                    fg.appendChild(list);
+
+                    if( loaded.num === len - failed.num )
+                    _self._loadend( {
+                        fg,
+                        success : loaded,
+                        fail : failed
+                    } );
+                }
+
+                img.src = item;
+            }(i,item));
+        }
     }
     //加载中的事件处理
     _loading(){
 
     }
     //加载完成的事件处理
-    _loadend(){
-
+    _loadend(data){
+        this.lists.appendChild(data.fg);
+        this.lists.style.height = this.height + "px";
     }
     //触摸开始
     _start(){
@@ -107,8 +186,8 @@ class watch3D {
 
         let angle = this.rotateAngle;
 
-        this.rotateBox.style.cssText = "-webkit-transform: rotateX("+angle.y+"deg) rotateY("+angle.x+"deg);\
-                                        transform: rotateX("+angle.y+"deg) rotateY("+angle.x+"deg);"
+        this.rotateBox.style.cssText = "-webkit-transform: translateZ("+(1050 - this.translateZ)+"px) rotateX("+angle.y+"deg) rotateY("+angle.x+"deg);\
+                                        transform: translateZ("+(1050 - this.translateZ)+"px) rotateX("+angle.y+"deg) rotateY("+angle.x+"deg);"
     }
     //触摸结束
     _end(){
@@ -132,7 +211,12 @@ class watch3D {
 
         this.stage = this.box.querySelector(".watch3D");
 
+        this.container = this.box.querySelector(".watch3D-container");
+
         this.rotateBox = this.box.querySelector(".watch3D-wrapper");
+
+        this.rotateBox.style.cssText = "-webkit-transform: translateZ("+(1050 - this.translateZ)+"px);\
+                                        transform: translateZ("+(1050 - this.translateZ)+"px)";
 
         this.lists = this.box.querySelector(".watch3D-lists");
 
@@ -203,10 +287,20 @@ class watch3D {
 }
 
 new watch3D({
-   wrapper : ".wrapper",
-   width: 4000,
-   height : 2000,
-   resource : "src/sources/sun.jpg"
+    wrapper : ".wrapper",
+    width: 4032,
+    height : 500,
+    num : 8,
+    resource : [
+        "src/sources/lt.png",
+        "src/sources/lt.png",
+        "src/sources/lt.png",
+        "src/sources/lt.png",
+        "src/sources/lt.png",
+        "src/sources/lt.png",
+        "src/sources/lt.png",
+        "src/sources/lt.png"
+    ]
 });
 
 })(window,Math);
