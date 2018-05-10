@@ -10,6 +10,8 @@ class watch3D {
 
         this.num = opts.num >= 4 ? opts.num : 18;
 
+        this.reverse = opts.reverse === false ? false : true;
+
         this.resource = opts.resource || "";
 
         this.width = opts.width || 100;
@@ -55,17 +57,24 @@ class watch3D {
         list.style.webkitTransform = "translate(-50%,-50%) rotateY("+(id*360/this.num)+"deg) rotateZ(0deg) translateZ("+this.translateZ+"px)";
         list.style.transform = "translate(-50%,-50%) rotateY("+(id*360/this.num)+"deg) rotateZ(0deg) translateZ("+this.translateZ+"px)";
 
+        let tip = this._createTip(id,{});
+
+        if( tip ) list.innerHTML = tip;
+
         return list;
     }
     //生成tip
     _createTip(id,data){
-        
+
         let tip = this.tips[id];
 
-        let tpl = '<div class="tip" style="">\
+        if(!tip) return null;
+
+        let tpl = '<div class="watch3D-tip" style="">\
                         <div class="tip-point">\
                         </div>\
                         <div class="tpl-content">\
+                            asdasdsadsad\
                         </div>\
                     </div>';
 
@@ -240,6 +249,8 @@ class watch3D {
         let rx = this.rotateAngle.x;
         let ry = this.rotateAngle.y;
 
+        let rev = this.reverse ? 1 : -1;
+
         ele["on"+start] = function (e) {
             draging = true;
             let x = e.screenX || e.touches[0].screenX;
@@ -268,7 +279,7 @@ class watch3D {
             if( ry > _self.maxY ) ry = _self.maxY;
             else if( ry < -_self.maxY ) ry = -_self.maxY;
 
-            _self.rotateAngle = { x : rx , y : ry };
+            _self.rotateAngle = { x : rx * rev , y : ry * rev };
 
             _self._move();
         };
@@ -288,19 +299,16 @@ class watch3D {
 
 new watch3D({
     wrapper : ".wrapper",
-    width: 4032,
-    height : 500,
-    num : 8,
-    resource : [
-        "src/sources/lt.png",
-        "src/sources/lt.png",
-        "src/sources/lt.png",
-        "src/sources/lt.png",
-        "src/sources/lt.png",
-        "src/sources/lt.png",
-        "src/sources/lt.png",
-        "src/sources/lt.png"
-    ]
+    width: 4000,
+    height : 2000,
+    num : 12,
+    tips : {
+        0 : {
+            "left" : 0,
+            "top" : 0,
+        }
+    },
+    resource : "src/sources/sun.jpg"
 });
 
 })(window,Math);
