@@ -36,6 +36,10 @@ class watch3D {
 
         this.error = opts.error || function(){};
 
+        this.eleList = {};
+
+        this.prevListEle = null;
+
         this.init();
 
     }
@@ -43,10 +47,30 @@ class watch3D {
     checkType(target){
         return Object.prototype.toString.call(target) === '[object String]' ? "string" : "element";
     }
+    //判断处于焦点位置的部分
+    _checkWhichId(rx){
+
+        let uAng = 360 / this.num;
+        let leftAng = rx % 360;
+        let trx = leftAng < 0 ? leftAng + 360 : leftAng;
+
+        let id = this.num - Math.round( trx / uAng );
+
+        if( this.eleList[id] === this.prevListEle ) return false;
+
+        this.prevListEle && this.prevListEle.classList.remove("watch3D-check");
+
+        this.eleList[id] && this.eleList[id].classList.add("watch3D-check");
+
+        this.prevListEle = this.eleList[id];
+    }
     //生成单元列表
     _createList(i,src,id){
 
         let list = document.createElement("div");
+
+        this.eleList[id] = list;
+
         list.className += "watch3D-list list-"+(id+1);
         list.style.backgroundImage = "url("+src+")";
         list.style.backgroundRepeat = "no-repeat";
@@ -85,6 +109,8 @@ class watch3D {
     init(){
 
         this.box = this.checkType(this.box) === "string" ? document.querySelector(this.box) : this.box;
+
+        this.eleList = {};
 
         this._template();
 
@@ -224,8 +250,8 @@ class watch3D {
 
         this.rotateBox = this.box.querySelector(".watch3D-wrapper");
 
-        this.rotateBox.style.cssText = "-webkit-transform: translateZ("+(1050 - this.translateZ)+"px);\
-                                        transform: translateZ("+(1050 - this.translateZ)+"px)";
+        this.rotateBox.style.cssText = "-webkit-transform: translateZ("+(1050 - this.translateZ)+"px) rotateY(-180deg);\
+                                        transform: translateZ("+(1050 - this.translateZ)+"px) rotateY(-180deg)";
 
         this.lists = this.box.querySelector(".watch3D-lists");
 
@@ -270,8 +296,10 @@ class watch3D {
             let x = e.screenX || e.touches[0].screenX || e.changeTouches[0].screenX;
             let y = e.screenY || e.touches[0].screenY || e.changeTouches[0].screenY;
 
-            rx += (x - prevPoint.x);
-            ry += (y - prevPoint.y);
+            rx += (x - prevPoint.x)/2;
+            ry += (y - prevPoint.y)/2;
+
+            _self._checkWhichId(rx);
 
             prevPoint.x = x;
             prevPoint.y = y;
@@ -279,7 +307,7 @@ class watch3D {
             if( ry > _self.maxY ) ry = _self.maxY;
             else if( ry < -_self.maxY ) ry = -_self.maxY;
 
-            _self.rotateAngle = { x : rx * rev , y : ry * rev };
+            _self.rotateAngle = { x : -180 + rx * rev , y : ry * rev };
 
             _self._move();
         };
@@ -304,6 +332,14 @@ new watch3D({
     num : 12,
     tips : {
         0 : {
+            "left" : 0,
+            "top" : 0,
+        },
+        1 : {
+            "left" : 0,
+            "top" : 0,
+        },
+        2 : {
             "left" : 0,
             "top" : 0,
         }

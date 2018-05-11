@@ -76,4 +76,9 @@ html,body{
     transform-origin: 50% 50% 0px;
     -webkit-transform: translateZ(-5px) rotateY(180deg);
     transform: translateZ(-5px) rotateY(180deg);
+    display: none;
+}
+
+.watch3D-check .watch3D-tip{
+    display: block;
 }
