@@ -342,6 +342,10 @@ new watch3D({
         2 : {
             "left" : 0,
             "top" : 0,
+        },
+        3 : {
+            "left" : 0,
+            "top" : 0,
         }
     },
     resource : "src/sources/sun.jpg"
