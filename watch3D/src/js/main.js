@@ -4,41 +4,51 @@ class watch3D {
     //参数配置
     constructor(opts){
 
-        this.auto = opts.auto === false ? false : true;
+        this.auto = opts.auto === false ? false : true; //是否自动完成后续生成
 
-        this.box = opts.wrapper || "body";
+        this.box = opts.wrapper || "body"; //插件容器
 
-        this.num = opts.num >= 4 ? opts.num : 18;
+        this.num = opts.num >= 4 ? opts.num : 18; //分隔区块数量
 
-        this.reverse = opts.reverse === false ? false : true;
+        this.reverse = opts.reverse === false ? false : true; //是否反向镜头，默认反向
 
-        this.resource = opts.resource || "";
+        this.resource = opts.resource || ""; //图片链接（字符串或数组）
 
-        this.width = opts.width || 100;
+        this.width = opts.width || 100; //全景图宽度
 
-        this.height = opts.height || 100;
+        this.height = opts.height || 100; //全景图高度
 
         this.tips = opts.tips || {}; //放置tips
 
-        this.maxY = opts.maxY || 15;
+        this.maxY = opts.maxY || 15; //仰俯角最大角度
 
-        this.unit = this.width / this.num;
+        this.unit = this.width / this.num; //每块区域宽度
 
-        this.translateZ = ( this.unit / 2 ) / ( Math.tan( Math.PI / 180 * 360 / this.num / 2 ) ) - 5;
+        this.translateZ = ( this.unit / 2 ) / ( Math.tan( Math.PI / 180 * 360 / this.num / 2 ) ) - 5; //每块区域在Z轴上的距离
 
-        this.stage = null;
+        this.stage = null; //场景元素
 
-        this.rotateBox = null;
+        this.rotateBox = null; //旋转效果元素
 
-        this.lists = null;
+        this.lists = null; //区块包裹元素
 
-        this.rotateAngle = { x : 0, y : 0 };
+        this.rotateAngle = { x : 0, y : 0 }; //已经旋转的角度记录
 
-        this.error = opts.error || function(){};
+        this.eleList = {}; //独立区域元素集合
 
-        this.eleList = {};
+        this.prevListEle = null; //上一个显示TIP元素
 
-        this.prevListEle = null;
+        this.start = opts.start || function () {}; //触摸开始
+
+        this.move = opts.move || function(){}; //滑动中
+
+        this.end = opts.end || function(){}; //触摸结束
+
+        this.loading = opts.loading || function(){}; //资源加载中
+
+        this.loadend = opts.loadend || function(){}; //资源加载完成
+
+        this.error = opts.error || function(){}; //资源加载失败
 
         this.init();
 
@@ -145,7 +155,7 @@ class watch3D {
             _self._loadend( {
                 fg,
                 success : { num : 1, list : [_self.resource] },
-                fail : { nnum : 0, list : [] }
+                fail : { num : 0, list : [] }
             } );
         };
         img.onerror = function(){
@@ -153,7 +163,7 @@ class watch3D {
             _self._loadend( {
                 fg,
                 success : { num : 0, list : [] },
-                fail : { nnum : 1, list : [_self.resource] }
+                fail : { num : 1, list : [_self.resource] }
             } );
         };
         img.src = this.resource;
@@ -204,29 +214,32 @@ class watch3D {
         }
     }
     //加载中的事件处理
-    _loading(){
-
+    _loading(data){
+        this.loading(data);
     }
     //加载完成的事件处理
     _loadend(data){
         this.lists.appendChild(data.fg);
         this.lists.style.height = this.height + "px";
+        this.loadend(data.success,data.fail);
     }
     //触摸开始
-    _start(){
-
+    _start(point){
+        this.start(point);
     }
     //触摸中
-    _move(){
+    _move(point){
 
         let angle = this.rotateAngle;
 
         this.rotateBox.style.cssText = "-webkit-transform: translateZ("+(1050 - this.translateZ)+"px) rotateX("+angle.y+"deg) rotateY("+angle.x+"deg);\
                                         transform: translateZ("+(1050 - this.translateZ)+"px) rotateX("+angle.y+"deg) rotateY("+angle.x+"deg);"
+
+        this.move(point);
     }
     //触摸结束
-    _end(){
-
+    _end(point){
+        this.end(point);
     }
     //更新模板
     _template(){
@@ -309,12 +322,12 @@ class watch3D {
 
             _self.rotateAngle = { x : -180 + rx * rev , y : ry * rev };
 
-            _self._move();
+            _self._move(prevPoint);
         };
 
         ele["on"+end] = function (e) {
           draging = false;
-          _self._end();
+          _self._end(prevPoint);
         };
 
         ele.onmouseleave = function () {
@@ -342,13 +355,22 @@ new watch3D({
         2 : {
             "left" : 0,
             "top" : 0,
-        },
-        3 : {
-            "left" : 0,
-            "top" : 0,
         }
     },
-    resource : "src/sources/sun.jpg"
+    resource : "src/sources/sun.jpg",
+    loading(data){
+    },
+    loadend(success,fail){
+    },
+    start(point){
+
+    },
+    move(point){
+
+    },
+    end(point){
+
+    }
 });
 
 })(window,Math);
