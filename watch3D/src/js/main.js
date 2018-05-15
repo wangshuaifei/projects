@@ -8,23 +8,63 @@ class watch3D {
 
         this.box = opts.wrapper || "body"; //插件容器
 
-        this.num = opts.num >= 4 ? opts.num : 18; //分隔区块数量
+        this.start = opts.start || function () {}; //触摸开始
 
-        this.reverse = opts.reverse === false ? false : true; //是否反向镜头，默认反向
+        this.move = opts.move || function(){}; //滑动中
 
-        this.resource = opts.resource || ""; //图片链接（字符串或数组）
+        this.end = opts.end || function(){}; //触摸结束
 
-        this.width = opts.width || 100; //全景图宽度
+        this.loading = opts.loading || function(){}; //资源加载中
 
-        this.height = opts.height || 100; //全景图高度
+        this.loadend = opts.loadend || function(){}; //资源加载完成
 
-        this.tips = opts.tips || {}; //放置tips
+        this.error = opts.error || function(){}; //资源加载失败
 
-        this.maxY = opts.maxY || 15; //仰俯角最大角度
+        this.autoplay = opts.autoplay || false; //是否自动播放
 
-        this.unit = this.width / this.num; //每块区域宽度
+        this.changeData(opts);
 
-        this.translateZ = ( this.unit / 2 ) / ( Math.tan( Math.PI / 180 * 360 / this.num / 2 ) ) - 5; //每块区域在Z轴上的距离
+        this.init();
+
+        return this;
+    }
+    //自动播放
+    play(){
+        this.autoplay = true;
+
+        let speed = 0.1;
+
+        let rev = this.reverse ? 1 : -1;
+
+        this._loop(speed,rev);
+
+    }
+    pause(){
+        this.autoplay = false;
+    }
+    _loop(speed,rev){
+        if(!this.autoplay) return false;
+
+        let rx = this.rotateAngle.x || -180;
+        let ry = this.rotateAngle.y || 0;
+
+        this.rotateAngle = { x : rx + speed * rev , y : ry };
+
+        this._move({x:0,y:0});
+
+        let _self = this;
+
+        requestAnimationFrame(function(){
+            _self._loop(speed,rev);
+        });
+    }
+    //检查传入的资源类型（element或src）
+    checkType(target){
+        return Object.prototype.toString.call(target) === '[object String]' ? "string" : "element";
+    }
+    //计算数据
+    _count(opts){
+        this.tips = opts.tips || this.tips || {}; //放置tips
 
         this.stage = null; //场景元素
 
@@ -38,24 +78,31 @@ class watch3D {
 
         this.prevListEle = null; //上一个显示TIP元素
 
-        this.start = opts.start || function () {}; //触摸开始
+        this.unit = this.width / this.num; //每块区域宽度
 
-        this.move = opts.move || function(){}; //滑动中
-
-        this.end = opts.end || function(){}; //触摸结束
-
-        this.loading = opts.loading || function(){}; //资源加载中
-
-        this.loadend = opts.loadend || function(){}; //资源加载完成
-
-        this.error = opts.error || function(){}; //资源加载失败
-
-        this.init();
-
+        this.translateZ = ( this.unit / 2 ) / ( Math.tan( Math.PI / 180 * 360 / this.num / 2 ) ) - 5; //每块区域在Z轴上的距离
     }
-    //检查传入的资源类型（element或src）
-    checkType(target){
-        return Object.prototype.toString.call(target) === '[object String]' ? "string" : "element";
+    //修改数据
+    changeData(opts,doInit){
+
+        opts = opts || {};
+
+        this.num = opts.num >= 4 ? opts.num : 18; //分隔区块数量
+
+        this.reverse = opts.reverse === false ? false : true; //是否反向镜头，默认反向
+
+        this.resource = opts.resource || ""; //图片链接（字符串或数组）
+
+        this.width = opts.width || 100; //全景图宽度
+
+        this.height = opts.height || 100; //全景图高度
+
+        this.maxY = opts.maxY || 15; //仰俯角最大角度
+
+        this._count(opts);
+
+        doInit && this.init();
+
     }
     //判断处于焦点位置的部分
     _checkWhichId(rx){
@@ -126,6 +173,9 @@ class watch3D {
 
         if(this.auto)
         this.loadResources();
+
+        if(this.autoplay)
+        this.play();
     }
     //加载资源
     loadResources(){
@@ -338,11 +388,13 @@ class watch3D {
     }
 }
 
-new watch3D({
+let w3d = new watch3D({
     wrapper : ".wrapper",
-    width: 4000,
-    height : 2000,
+    autoplay : true,
+    width: 5000,
+    height : 2500,
     num : 12,
+    maxY : 25,
     tips : {
         0 : {
             "left" : 0,
@@ -357,7 +409,7 @@ new watch3D({
             "top" : 0,
         }
     },
-    resource : "src/sources/sun.jpg",
+    resource : "src/sources/5.jpg",
     loading(data){
     },
     loadend(success,fail){
