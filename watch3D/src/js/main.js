@@ -155,7 +155,7 @@ class watch3D {
                         <div class="tip-point">\
                         </div>\
                         <div class="tpl-content">\
-                            asdasdsadsad\
+                            '+tip.content+'\
                         </div>\
                     </div>';
 
@@ -399,14 +399,17 @@ let w3d = new watch3D({
         0 : {
             "left" : 0,
             "top" : 0,
+            "content" : "hello,world"
         },
         1 : {
             "left" : 0,
             "top" : 0,
+            "content" : "hello,world"
         },
         2 : {
             "left" : 0,
             "top" : 0,
+            "content" : "hello,world"
         }
     },
     resource : "src/sources/5.jpg",
