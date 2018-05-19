@@ -397,18 +397,16 @@ let w3d = new watch3D({
     maxY : 25,
     tips : {
         0 : {
-            "left" : 0,
-            "top" : 0,
+            styles : {
+              "height" : "",
+              "width" : ""
+            },
             "content" : "hello,world"
         },
         1 : {
-            "left" : 0,
-            "top" : 0,
             "content" : "hello,world"
         },
         2 : {
-            "left" : 0,
-            "top" : 0,
             "content" : "hello,world"
         }
     },
