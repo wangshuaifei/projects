@@ -404,9 +404,17 @@ let w3d = new watch3D({
             "content" : "hello,world"
         },
         1 : {
+            styles : {
+                "height" : "",
+                "width" : ""
+            },
             "content" : "hello,world"
         },
         2 : {
+            styles : {
+                "height" : "",
+                "width" : ""
+            },
             "content" : "hello,world"
         }
     },
