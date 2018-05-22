@@ -151,12 +151,17 @@ class watch3D {
 
         if(!tip) return null;
 
-        let tpl = '<div class="watch3D-tip" style="">\
-                        <div class="tip-point">\
-                        </div>\
-                        <div class="tpl-content">\
-                            '+tip.content+'\
-                        </div>\
+        let styles = tip.styles;
+
+        let str = "";
+
+        for( let [key,item] of Object.entries(styles) ){
+            str += ( key + ":" + item + ";" );
+        }
+
+        let tpl = '<div class="watch3D-tip" style="'+str+'">\
+                        <div class="tip-point"></div>\
+                        <div class="tpl-content">'+tip.content+'</div>\
                     </div>';
 
         return tpl;
@@ -356,8 +361,8 @@ class watch3D {
 
             if(!draging) return false;
 
-            let x = e.screenX || e.touches[0].screenX || e.changeTouches[0].screenX;
-            let y = e.screenY || e.touches[0].screenY || e.changeTouches[0].screenY;
+            let x = e.screenX || (e.touches && e.touches[0].screenX) || (e.changeTouches && e.changeTouches[0].screenX) || 0;
+            let y = e.screenY || (e.touches && e.touches[0].screenY) || (e.changeTouches && e.changeTouches[0].screenY) || 0;
 
             rx += (x - prevPoint.x)/2;
             ry += (y - prevPoint.y)/2;
@@ -398,24 +403,13 @@ let w3d = new watch3D({
     tips : {
         0 : {
             styles : {
-              "height" : "",
-              "width" : ""
+                "height" : "100px",
+                "width" : "80%",
+                "background-color" : "#6cf",
+                "text-align" : "center",
+                "margin-right" : "10px"
             },
-            "content" : "hello,world"
-        },
-        1 : {
-            styles : {
-                "height" : "",
-                "width" : ""
-            },
-            "content" : "hello,world"
-        },
-        2 : {
-            styles : {
-                "height" : "",
-                "width" : ""
-            },
-            "content" : "hello,world"
+            "content" : "啊手机打开啦圣诞节啦看电视剧"
         }
     },
     resource : "src/sources/5.jpg",
@@ -433,5 +427,9 @@ let w3d = new watch3D({
 
     }
 });
+
+setTimeout(function(){
+    w3d.pause();
+},5000);
 
 })(window,Math);
