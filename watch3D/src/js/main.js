@@ -410,6 +410,16 @@ let w3d = new watch3D({
                 "margin-right" : "10px"
             },
             "content" : "啊手机打开啦圣诞节啦看电视剧"
+        },
+        1 : {
+            styles : {
+                "height" : "100px",
+                "width" : "80%",
+                "background-color" : "#6cf",
+                "text-align" : "center",
+                "margin-right" : "10px"
+            },
+            "content" : "啊手机打开啦圣诞节啦看电视剧"
         }
     },
     resource : "src/sources/5.jpg",
