@@ -8,17 +8,17 @@ class watch3D {
 
         this.box = opts.wrapper || "body"; //插件容器
 
-        this.start = opts.start || function () {}; //触摸开始
+        this.start = opts.start || this.start || function () {}; //触摸开始
 
-        this.move = opts.move || function(){}; //滑动中
+        this.move = opts.move || this.move || function(){}; //滑动中
 
-        this.end = opts.end || function(){}; //触摸结束
+        this.end = opts.end || this.end || function(){}; //触摸结束
 
-        this.loading = opts.loading || function(){}; //资源加载中
+        this.loading = opts.loading || this.loading || function(){}; //资源加载中
 
-        this.loadend = opts.loadend || function(){}; //资源加载完成
+        this.loadend = opts.loadend || this.loadend || function(){}; //资源加载完成
 
-        this.error = opts.error || function(){}; //资源加载失败
+        this.error = opts.error || this.error || function(){}; //资源加载失败
 
         this.autoplay = opts.autoplay || false; //是否自动播放
 
@@ -87,17 +87,17 @@ class watch3D {
 
         opts = opts || {};
 
-        this.num = opts.num >= 4 ? opts.num : 18; //分隔区块数量
+        this.num = ( opts.num >= 4 ? opts.num : 18 ) || this.num; //分隔区块数量
 
-        this.reverse = opts.reverse === false ? false : true; //是否反向镜头，默认反向
+        this.reverse = (opts.reverse === false ? false : true) || this.reverse; //是否反向镜头，默认反向
 
-        this.resource = opts.resource || ""; //图片链接（字符串或数组）
+        this.resource = opts.resource || this.resource || ""; //图片链接（字符串或数组）
 
-        this.width = opts.width || 100; //全景图宽度
+        this.width = opts.width || this.width || 100; //全景图宽度
 
-        this.height = opts.height || 100; //全景图高度
+        this.height = opts.height || this.height || 100; //全景图高度
 
-        this.maxY = opts.maxY || 15; //仰俯角最大角度
+        this.maxY = opts.maxY || this.maxY || 15; //仰俯角最大角度
 
         this._count(opts);
 
@@ -388,6 +388,27 @@ class watch3D {
         ele.onmouseleave = function () {
           draging = false;
           _self._end();
+        };
+
+        let pa = 0;
+        let pb = 0;
+
+        window.ondeviceorientation = function(e){
+            let a = e.alpha;
+            let b = e.beta;
+
+            rx += a - pa;
+            ry += b - pb;
+
+            if( ry > _self.maxY ) ry = _self.maxY;
+            else if( ry < -_self.maxY ) ry = -_self.maxY;
+
+            _self.rotateAngle = { x : -180 - rx , y : ry };
+
+            _self._move({x:rx,y:ry});
+
+            pa = a;
+            pb = b;
         };
 
     }
