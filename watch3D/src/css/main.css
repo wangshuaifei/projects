@@ -67,18 +67,26 @@ html,body{
 
 .watch3D-tip{
     position: absolute;
+    left: 50%;
+    top: 50%;
+    width: auto;
+    height: auto;
+    -webkit-transform-origin: 50% 50% 0px;
+    transform-origin: 50% 50% 0px;
+    -webkit-transform: translate3d(-50%,-50%,-1px) rotateY(180deg);
+    transform: translate3d(-50%,-50%,-1px) rotateY(180deg);
+    display: block;
+}
+
+.watch3D-tip-wrapper{
+    position: absolute;
     left: 0px;
     top: 0px;
     width: 100px;
     height: 100px;
     background: #6cf;
-    -webkit-transform-origin: 50% 50% 0px;
-    transform-origin: 50% 50% 0px;
-    -webkit-transform: translateZ(-1px) rotateY(180deg);
-    transform: translateZ(-1px) rotateY(180deg);
-    display: block;
 }
 
-.watch3D-check .watch3D-tip{
-    display: block;
+.watch3D-tpl-content{
+    position: relative;
 }

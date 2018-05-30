@@ -1,5 +1,3 @@
-(function(window,Math,undefined){
-
 class watch3D {
     //参数配置
     constructor(opts){
@@ -13,6 +11,8 @@ class watch3D {
         this.move = opts.move || this.move || function(){}; //滑动中
 
         this.end = opts.end || this.end || function(){}; //触摸结束
+
+        this.loadstart = opts.loadstart || this.loadstart || function(){}; //加载开始
 
         this.loading = opts.loading || this.loading || function(){}; //资源加载中
 
@@ -59,7 +59,7 @@ class watch3D {
         });
     }
     //检查传入的资源类型（element或src）
-    checkType(target){
+    _checkType(target){
         return Object.prototype.toString.call(target) === '[object String]' ? "string" : "element";
     }
     //计算数据
@@ -98,6 +98,8 @@ class watch3D {
         this.height = opts.height || this.height || 100; //全景图高度
 
         this.maxY = opts.maxY || this.maxY || 15; //仰俯角最大角度
+
+        this.auto = true;
 
         this._count(opts);
 
@@ -140,7 +142,9 @@ class watch3D {
 
         let tip = this._createTip(id,{});
 
-        if( tip ) list.innerHTML = tip;
+        if( tip ) {
+            list.appendChild(tip);
+        }
 
         return list;
     }
@@ -159,24 +163,32 @@ class watch3D {
             str += ( key + ":" + item + ";" );
         }
 
-        let tpl = '<div class="watch3D-tip" style="'+str+'">\
-                        <div class="tip-point"></div>\
-                        <div class="tpl-content">'+tip.content+'</div>\
-                    </div>';
+        let callback = tip.callback || function(){};
+
+        let tpl = document.createElement("div");
+
+        tpl.className = "watch3D-tip";
+
+        tpl.onclick = callback;
+
+        tpl.innerHTML = '<div class="watch3D-tip-wrapper" style="'+str+'">\
+                            <div class="watch3D-tip-point"></div>\
+                            <div class="watch3D-tpl-content">'+tip.content+'</div>\
+                        </div>';
 
         return tpl;
 
     }
     //初始化组件
-    init(){
+    init(auto){
 
-        this.box = this.checkType(this.box) === "string" ? document.querySelector(this.box) : this.box;
+        this.box = this._checkType(this.box) === "string" ? document.querySelector(this.box) : this.box;
 
         this.eleList = {};
 
         this._template();
 
-        if(this.auto)
+        if(this.auto || auto)
         this.loadResources();
 
         if(this.autoplay)
@@ -186,6 +198,8 @@ class watch3D {
     loadResources(){
 
         if( !this.resource ) return false;
+
+        this._loadstart();
 
         if( typeof this.resource === "string" )
         this._loadSingle();
@@ -268,6 +282,10 @@ class watch3D {
             }(i,item));
         }
     }
+    //加载开始
+    _loadstart(){
+        this.loadstart();
+    }
     //加载中的事件处理
     _loading(data){
         this.loading(data);
@@ -284,13 +302,18 @@ class watch3D {
     }
     //触摸中
     _move(point){
+        this._rotate();
 
+        this.move(point);
+    }
+    //旋转
+    _rotate(){
         let angle = this.rotateAngle;
+
+        this._checkWhichId(-180 + angle.x);
 
         this.rotateBox.style.cssText = "-webkit-transform: translateZ("+(1050 - this.translateZ)+"px) rotateX("+angle.y+"deg) rotateY("+angle.x+"deg);\
                                         transform: translateZ("+(1050 - this.translateZ)+"px) rotateX("+angle.y+"deg) rotateY("+angle.x+"deg);"
-
-        this.move(point);
     }
     //触摸结束
     _end(point){
@@ -367,8 +390,6 @@ class watch3D {
             rx += (x - prevPoint.x)/2;
             ry += (y - prevPoint.y)/2;
 
-            _self._checkWhichId(rx);
-
             prevPoint.x = x;
             prevPoint.y = y;
 
@@ -390,77 +411,7 @@ class watch3D {
           _self._end();
         };
 
-        let pa = 0;
-        let pb = 0;
-
-        window.ondeviceorientation = function(e){
-            let a = e.alpha;
-            let b = e.beta;
-
-            rx += a - pa;
-            ry += b - pb;
-
-            if( ry > _self.maxY ) ry = _self.maxY;
-            else if( ry < -_self.maxY ) ry = -_self.maxY;
-
-            _self.rotateAngle = { x : -180 - rx , y : ry };
-
-            _self._move({x:rx,y:ry});
-
-            pa = a;
-            pb = b;
-        };
-
     }
 }
 
-let w3d = new watch3D({
-    wrapper : ".wrapper",
-    autoplay : true,
-    width: 5000,
-    height : 2500,
-    num : 12,
-    maxY : 25,
-    tips : {
-        0 : {
-            styles : {
-                "height" : "100px",
-                "width" : "80%",
-                "background-color" : "#6cf",
-                "text-align" : "center",
-                "margin-right" : "10px"
-            },
-            "content" : "啊手机打开啦圣诞节啦看电视剧"
-        },
-        1 : {
-            styles : {
-                "height" : "100px",
-                "width" : "80%",
-                "background-color" : "#6cf",
-                "text-align" : "center",
-                "margin-right" : "10px"
-            },
-            "content" : "啊手机打开啦圣诞节啦看电视剧"
-        }
-    },
-    resource : "src/sources/5.jpg",
-    loading(data){
-    },
-    loadend(success,fail){
-    },
-    start(point){
-
-    },
-    move(point){
-
-    },
-    end(point){
-
-    }
-});
-
-setTimeout(function(){
-    w3d.pause();
-},5000);
-
-})(window,Math);
+export default watch3D;
