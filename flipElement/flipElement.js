@@ -57,7 +57,7 @@ class FlipElement {
     }
 
     init(){
-        this.initTemplate();
+        this.initTemplate();0=
         this.bindEvent();
     }
 
