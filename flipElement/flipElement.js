@@ -12,32 +12,47 @@ class FlipElement {
 
         this.items = opts.items || [];
 
+        this.faceItem = opts.face || "";
+
         this.init();
     }
 
     bindEvent(){
         let items = this.box.querySelectorAll(".flip-item");
+        let face = this.box.querySelector(".flip-element-face");
         let first = items[1];
         let last = items[items.length-1];
         let _self = this;
 
         this.elem.onclick = function(){
             if( _self.doShow ){
+                items[0].style.height = "auto";
+                face.style.webkitTransform = "translateZ(-1px) rotateX(-180deg)";
+                face.style.transform = "translateZ(-1px) rotateX(-180deg)";
                 _self.showAll(first);
                 _self.doShow = false;
             } else {
-                _self.hideAll(last);
+                _self.hideAll(last,function () {
+                    face.style.webkitTransform = "translateZ(2px) rotateX(0deg)";
+                    face.style.transform = "translateZ(2px) rotateX(0deg)";
+                    setTimeout(function(){
+                        items[0].style.height = _self.firstItemHeight + "px";
+                    },300);
+                });
                 _self.doShow = true;
             }
 
         };
     }
 
-    hideAll(wrap){
+    hideAll(wrap,callback){
         let _self = this;
+        callback = callback || function(){};
 
-        if( !this.parent(wrap,"flip-item") )
-        return false;
+        if( !this.parent(wrap,"flip-item") ){
+            callback();
+            return false;
+        }
 
         let transEnd = function(){
 
@@ -46,7 +61,7 @@ class FlipElement {
             wrap.removeEventListener("webkitTransitionEnd",transEnd);
             wrap.removeEventListener("transitionend",transEnd);
 
-            if(newWrap) _self.hideAll(newWrap);
+            if(newWrap) _self.hideAll(newWrap,callback);
         };
 
         wrap.addEventListener("webkitTransitionEnd",transEnd);
@@ -58,6 +73,7 @@ class FlipElement {
 
     init(){
         this.initTemplate();
+        this.reInitStyle();
         this.bindEvent();
     }
 
@@ -74,7 +90,14 @@ class FlipElement {
 
         let index = 0;
 
-        this.box.innerHTML = '<div class="flip-element-container"><div class="flip-element-wrapper"></div></div>';
+        this.box.innerHTML = '<div class="flip-element-container">' +
+                                '<div class="flip-element-wrapper">' +
+                                    '<div class="flip-element-face">'+
+                                        '<div class="flip-face-bg"></div>'+
+                                        '<div class="flip-face-img">'+this.faceItem+'</div>'+
+                                    '</div>'+
+                                '</div>' +
+                            '</div>';
 
         this.elem = this.box.querySelector(".flip-element-container");
         this.wrapper = this.box.querySelector(".flip-element-wrapper");
@@ -82,8 +105,10 @@ class FlipElement {
         for( let item of this.items ){
             let div = document.createElement("div");
             div.classList.add("flip-item");
-            div.innerHTML = '<div class="flip-item-bg flip-element-bg"></div>' +
-                            '<div class="flip-content">'+item.text+'</div>';
+            div.innerHTML = '<div class="flip-item-bg flip-element-bg"></div>'+
+                            '<div class="flip-content">'+
+                                item.text +
+                            '</div>';
             prev ? prev.appendChild(div) : fg.appendChild(div);
             prev = div;
             this.initStyle(index,div);
@@ -101,6 +126,18 @@ class FlipElement {
             return par;
         }
         return this.parent(par,selector);
+    }
+
+    reInitStyle(){
+        let items = this.wrapper.querySelectorAll(".flip-item");
+        for( let [index,item] of items.entries() ){
+            let ch = item.querySelector(".flip-content").clientHeight;
+            item.querySelector(".flip-item-bg").style.height = ch + "px";
+            if( index === 0 ){
+                this.firstItemHeight = ch;
+                item.style.height = ch + "px";
+            }
+        }
     }
 
     select(selector,boxer = this.box){
@@ -144,6 +181,25 @@ new FlipElement({
             text : '<div class="title">4.sadasd</div><div class="content">阿瑟大时代撒旦</div>'
         }
     ]
-})
+});
+
+new FlipElement({
+    wrapper : '.box2',
+    face : "<img src='bg2.jpg' >",
+    items : [
+        {
+            text : '<div class="title">1.sadasddsa</div><div class="content">阿瑟大时代撒旦</div>'
+        },
+        {
+            text : '<div class="title">2.sadasdsad</div><div class="content">阿瑟大时代撒旦</div>'
+        },
+        {
+            text : '<div class="title">3.sadasdda</div><div class="content">阿瑟大时代撒旦</div>'
+        },
+        {
+            text : '<div class="title">4.sadasdads</div><div class="content">阿瑟大时代撒旦</div>'
+        }
+    ]
+});
 
 })(window,Math);
