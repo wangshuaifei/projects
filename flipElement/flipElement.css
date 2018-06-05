@@ -18,6 +18,9 @@
     height: auto;
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
+
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .flip-item{
@@ -25,6 +28,8 @@
     height: auto;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+    z-index: 0;
+    overflow: hidden;
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     -webkit-transform-origin: 50% 0%;
@@ -33,8 +38,8 @@
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 
-    -webkit-transition: -webkit-transform 0.2s linear;
-    transition: transform 0.2s linear;
+    -webkit-transition: -webkit-transform 0.25s linear;
+    transition: transform 0.25s linear;
 
     -webkit-transform: translateZ(0px);
     transform: translateZ(0px);
@@ -42,7 +47,6 @@
 
 .flip-item-bg{
     position: absolute;
-    z-index: 0;
     width: 100%;
     height: 100%;
     -webkit-transform: translateZ(0px);
@@ -62,6 +66,7 @@
     top: 0px;
     width: 100%;
     height: auto;
+    z-index: 1;
     -webkit-transform-origin: 50% 100%;
     transform-origin: 50% 100%;
     -webkit-transform: translateZ(2px) rotateX(0deg);
@@ -87,10 +92,8 @@
 
 .flip-face-img{
     position: relative;
-    min-height: 100px;
-    max-height: 150px;
     overflow: hidden;
-    height: auto;
+    height: 100%;
     -webkit-transform: translateZ(1px);
     transform: translateZ(1px);
 }
