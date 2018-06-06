@@ -39,12 +39,8 @@ class FlipElement {
 
             _self.animating = true;
 
-            if( _self.doShow ){
-                _self.show(items,face);
-            } else {
-                _self.hide(items,face);
-            }
-
+            //切换状态
+            _self.doShow ?  _self.show(items,face) : _self.hide(items,face);
         };
     }
 
@@ -52,9 +48,12 @@ class FlipElement {
         let _self = this;
         let last = items[items.length-1];
 
+        //防止样式变化导致的显示和动画BUG，需要在动画完成后调整样式
         _self.hideAll(last,function () {
+            //调整封面
             face.style.webkitTransform = "translateZ(2px) rotateX(0deg)";
             face.style.transform = "translateZ(2px) rotateX(0deg)";
+            //
             setTimeout(function(){
                 for( let item of items ){
                     item.style.height = _self.firstItemHeight + "px";
@@ -181,10 +180,12 @@ class FlipElement {
 
     show(items,face){
         let _self = this;
+        //从第二个元素开始展开
         let first = items[1];
         face.style.webkitTransform = "translateZ(-2px) rotateX(-180deg)";
         face.style.transform = "translateZ(-2px) rotateX(-180deg)";
 
+        //调整样式显示方式
         setTimeout(function(){
             for( let item of items ){
                 item.style.height = "auto";
