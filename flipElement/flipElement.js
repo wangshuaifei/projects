@@ -225,6 +225,7 @@ class FlipElement {
     }
 }
 
+//调用1
 new FlipElement({
     wrapper : '.box',
     face : "<div style='text-align: center;font-size: 20px;color: #876;'>hello,world!</div>",
@@ -244,6 +245,7 @@ new FlipElement({
     ]
 });
 
+//调用2
 new FlipElement({
     wrapper : '.box2',
     face : "<img src='bg2.jpg' >",
