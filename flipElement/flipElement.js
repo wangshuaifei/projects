@@ -251,7 +251,11 @@ new FlipElement({
     face : "<img src='bg2.jpg' >",
     items : [
         {
-            text : '<div class="title">1.sadasddsa</div><div class="content">阿瑟大时代撒旦</div>'
+            text : '<div class="title">1.sadasddsa</div>'+
+            '<div class="content">'+
+                '<div style="padding:20px 0px;">这是另一个段落</div>'+
+                '阿瑟大时代撒旦'+
+            '</div>'
         },
         {
             text : '<div class="title">2.sadasdsad</div><div class="content">阿瑟大时代撒旦<div>asdasdsadsa</div></div>'
