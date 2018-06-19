@@ -12,6 +12,11 @@ export default {
     return {
 
     }
+  },
+  head () {
+    return {
+      title: '关于我们'
+    }
   }
 }
 </script>

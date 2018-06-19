@@ -1,7 +1,32 @@
 <template>
-  <div>
-    <nuxt/>
-  </div>
+  <v-app id="my-app">
+    <v-content>
+
+      <v-toolbar dark color="blue">
+        <v-toolbar-title>
+          <nuxt-link to="/" class="logo">CGHome</nuxt-link>
+        </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <nuxt-link to="/">
+          <v-btn flat>首页</v-btn>
+        </nuxt-link>
+        <nuxt-link to="/about">
+          <v-btn flat>关于我们</v-btn>
+        </nuxt-link>
+        <nuxt-link to="/gc">
+          <v-btn flat>广场</v-btn>
+        </nuxt-link>
+        <nuxt-link to="/login">
+          <v-btn flat>注册/登录</v-btn>
+        </nuxt-link>
+      </v-toolbar>
+
+      <v-container fluid>
+        <nuxt/>
+      </v-container>
+
+    </v-content>
+  </v-app>
 </template>
 
 <style>
@@ -16,37 +41,14 @@ html {
   box-sizing: border-box;
 }
 
-*, *:before, *:after {
-  box-sizing: border-box;
-  margin: 0;
+
+#my-app{
+  background: #eee;
 }
 
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
+.logo{
+  position: relative;
+  color: inherit;
   text-decoration: none;
-  padding: 10px 30px;
-}
-
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
-}
-
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
-
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
 }
 </style>

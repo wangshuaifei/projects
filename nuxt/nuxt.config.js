@@ -3,11 +3,12 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'nuxt',
+    title: '%s - CGHome,游戏CG分享',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'a cg web' }
+      { hid: 'description', name: 'description', content: 'CGHome,游戏CG分享' },
+      { hid: 'keywords', name: 'keywords', content: 'CGHome,游戏CG分享' },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
@@ -21,12 +22,17 @@ module.exports = {
       lang: 'less'
     }
   ],
+  cache: true,
   plugins: [
     {
       src: '~/plugins/vuetify.js',
       ssr: true
     }
   ],
+  transition: {
+    name: 'page',
+    mode: 'out-in'
+  },
   /*
   ** Customize the progress bar color
   */
