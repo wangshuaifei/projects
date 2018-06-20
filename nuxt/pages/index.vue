@@ -154,6 +154,11 @@ export default {
           title: '鲁迅：我没有说过',
           subtitle: 'do you like van 游戏？ oh,yes! I\'m fucking coming!',
           avatar: '/head.jpg'
+        },
+        {
+          title: '鲁迅：我好像说过',
+          subtitle: 'do you like van 游戏？ oh,yes! I\'m fucking coming!',
+          avatar: '/head.jpg'
         }
       ]
     }
