@@ -127,8 +127,8 @@ export default {
         },
         {
           avatar: '/head.jpg',
-          title: '鲁迅',
-          subtitle: '我认识他们，他们都是一群吃人的人'
+          title: '无fuck说',
+          subtitle: '无fuck说'
         }
       ],
       imgs: [
