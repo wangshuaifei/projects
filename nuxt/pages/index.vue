@@ -129,6 +129,11 @@ export default {
           avatar: '/head.jpg',
           title: '无fuck说',
           subtitle: '无fuck说'
+        },
+        {
+          avatar: '/head.jpg',
+          title: '无fuck说asdasdsad',
+          subtitle: '无fuck说asdsd'
         }
       ],
       imgs: [
